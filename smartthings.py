@@ -45,11 +45,27 @@ class S(BaseHTTPRequestHandler):
     def do_GET(self):
         self._set_headers()
         
+        #Motion
+        req = smart_request(["query","motion","all"])
+        motionReqStr=""
+        	
+        for device in req:
+			motionReqStr+= device["name"]+" State: "+str(device["state"]) +"<br>"
+
+        # Switches
+        req = smart_request(["query","switch","all"])
+        switchReqStr=""
+        	
+        for device in req:
+			switchReqStr+= device["name"]+" State: "+str(device["state"]) +"<br>"
+			
         myHTML = "<html>" \
 					"<body>" \
 						"<h1> K4nuCK Home Dashboard</h1>" \
 						"<h2>Motion Sensors</h2>" \
-						"<p></p>" \
+						"<p>"+motionReqStr+"</p>" \
+						"<h2>Switches</h2>" \
+						"<p>"+switchReqStr+"</p>" \
 					"</body>" \
 				 "</html>"
         
