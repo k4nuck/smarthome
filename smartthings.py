@@ -109,7 +109,8 @@ def web_worker(mainLoopQueue):
 
 def fifo_worker(mainLoopQueue):
 	# Create FIFO File if needed
-	path = "/home/pi/projects/Smartthings/smart.fifo"
+	#path = "/home/pi/projects/Smartthings/smart.fifo"
+	path = "smart.fifo"
 	if not os.path.exists(path):
 		os.mkfifo(path)
 	

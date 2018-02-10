@@ -1,0 +1,15 @@
+#!/bin/bash
+
+pipe=$1
+
+if [[ ! -p $pipe ]]; then
+    echo "Reader not running"
+    exit 1
+fi
+
+
+if [[ "$2" ]]; then
+    echo -n "$2" >$pipe
+else
+    echo "NO COMMAND GIVEN"
+fi
