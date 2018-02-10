@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  smartthings.py
+#  smarthome.py
 #  
 #  Copyright 2018  <pi@raspberrypi>
 #  
