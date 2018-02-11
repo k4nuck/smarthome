@@ -34,8 +34,7 @@ from smartthings_cli import *
 
 class S(BaseHTTPRequestHandler):
     mainLoopQueue=None
-    #def __init__(self,myQueue):
-	#	self.mainLoopQueue=myQueue
+    smartthings=None
     
     def _set_headers(self):
         self.send_response(200)
@@ -46,14 +45,14 @@ class S(BaseHTTPRequestHandler):
         self._set_headers()
         
         #Motion
-        req = smart_request(["query","motion","all"])
+        req = self.smartthings.smart_request(["query","motion","all"])
         motionReqStr=""
         	
         for device in req:
 			motionReqStr+= device["name"]+" State: "+str(device["state"]) +"<br>"
 
         # Switches
-        req = smart_request(["query","switch","all"])
+        req = self.smartthings.smart_request(["query","switch","all"])
         switchReqStr=""
         	
         for device in req:
@@ -88,7 +87,7 @@ class S(BaseHTTPRequestHandler):
         
         self.wfile.write("<html><body><h1>POST!</h1></body></html>")
 
-def web_worker(mainLoopQueue):
+def web_worker(mainLoopQueue,smartthings):
 	print "JB - WEB Worker Spawned"
 	
 	#global MainLoopQueue
@@ -100,6 +99,7 @@ def web_worker(mainLoopQueue):
 	server_address = ('', 40000)
 	
 	handler_class.mainLoopQueue = mainLoopQueue
+	handler_class.smartthings = smartthings
 	
 	httpd = server_class(server_address, handler_class)
     
@@ -142,13 +142,16 @@ def main():
 	
 	#return
 	
+	#Create Smarttings Object
+	smartthings = SmartThings()
+	
 	# Create Queue
 	mainLoopQueue = multiprocessing.Queue()
 	
 	#Spawn Threads
 	fifo_thread = multiprocessing.Process(target=fifo_worker, args=(mainLoopQueue,))
 	timer_thread = multiprocessing.Process(target=timer_worker, args=(mainLoopQueue,))
-	web_thread = multiprocessing.Process(target=web_worker, args=(mainLoopQueue,))
+	web_thread = multiprocessing.Process(target=web_worker, args=(mainLoopQueue,smartthings,))
 	
 	print "JB - Main Loop: Calling Start"
 		
@@ -174,7 +177,7 @@ def main():
 			#call(["ls", "-ltr"])
 			
 			#Switches - smartthings_cli.py vvvv
-			req = smart_request(["query","switch","all"])
+			req = smartthings.smart_request(["query","switch","all"])
 			
 			for device in req:
 				print "---------------------"
@@ -183,7 +186,7 @@ def main():
 				print "State:"+str(device["state"])
 				
 			#Motion
-			req = smart_request(["query","motion","all"])
+			req = smartthings.smart_request(["query","motion","all"])
 			
 			for device in req:
 				print "---------------------"

@@ -36,8 +36,120 @@ from twisted.web import server, resource
 from twisted.internet import reactor
 
 '''
-' JB - Create a Class for this so that we dont have to load the config file every time
+' JB - Update with Use
 ''' 
+class SmartThings:
+	def __init__(self):
+		# Setup Logging
+		log_level = logging.INFO
+		logging.basicConfig(format='%(asctime)-15s %(levelname)-8s %(message)s', level=log_level)
+		logging.getLogger("requests").setLevel(logging.WARNING)
+		
+		#Load Config
+		self.config=load_config()
+		
+	def smart_request(self, cmd_list):
+		# Config from Init
+		config = self.config
+		
+		client_id = None
+		if 'client_id' in config:
+			client_id = config['client_id']
+
+		if not client_id:
+			logging.error('client_id missing from config!')
+			return None
+
+		client_secret = None
+		if 'client_secret' in config:
+			client_secret = config['client_secret']
+
+		if not client_secret:
+			logging.error('client_secret missing from config!')
+			return None
+
+		access_token = None
+		if 'access_token' in config:
+			access_token = config['access_token']
+
+		endpoint_base_url = None
+		if 'endpoint_base_url' in config:
+			endpoint_base_url = config['endpoint_base_url']
+
+		endpoint_url = None
+		if 'endpoint_url' in config:
+			endpoint_url = config['endpoint_url']
+
+		if not access_token:
+			logging.error('access_token missing from config!')
+			return None
+
+		# Query Smartthings Server
+		if not endpoint_url or not endpoint_base_url:
+			endpoint_base_url, endpoint_url = get_endpoint_url(access_token)
+			config['endpoint_base_url'] = endpoint_base_url
+			config['endpoint_url'] = endpoint_url
+
+		dev_lists = {}
+
+		valid_device_types = [
+			'switch',
+			'motion',
+			'temperature',
+			'humidity',
+			'contact',
+			'acceleration',
+			'presence',
+			'battery',
+			'threeAxis'
+		]
+
+		while len(cmd_list):
+			cmd = cmd_list.pop(0)
+
+			if cmd == 'set':
+				device_type = cmd_list.pop(0)
+				device_name = cmd_list.pop(0)
+				device_cmd = cmd_list.pop(0)
+
+				if not device_type in valid_device_types:
+					logging.error("Invalid device type: %s", device_type)
+					continue
+
+				if not device_type in dev_lists:
+					dev_lists[device_type] = get_status(access_token, endpoint_base_url, endpoint_url, device_type)
+				update_device(access_token, endpoint_base_url, endpoint_url, dev_lists[device_type], device_type, device_name, device_cmd)
+				return None
+            
+
+			devices=[]
+			if cmd == 'query':
+				device_type = cmd_list.pop(0)
+				device_name = cmd_list.pop(0)
+
+				if not device_type in valid_device_types:
+					logging.error("Invalid device type: %s", device_type)
+					continue
+
+				if not device_type in dev_lists:
+					dev_lists[device_type] = get_status(access_token, endpoint_base_url, endpoint_url, device_type)
+
+				if device_name == 'all':
+					for device_name in dev_lists[device_type]:
+						device_state = dev_lists[device_type][device_name]['state']
+						#logging.info('%s %s: %s', device_type, device_name, device_state)
+						devices.append({"type":device_type, "name":device_name, "state":device_state})
+                    
+				else:
+					if not device_name in dev_lists[device_type]:
+						logging.error('%s "%s" does not exist!', device_type, device_name)
+						continue
+					device_state = dev_lists[device_type][device_name]['state']
+					#logging.info('%s %s: %s', device_type, device_name, device_state)
+					devices.append({"type":device_type, "name":device_name, "state":device_state})
+               
+                    
+				return devices
 
 ''''
 ' Construct unique url for user
@@ -119,128 +231,10 @@ def load_config():
     print "Load Config:" + config_fn
 
     if os.path.exists(config_fn):
-        print "JB - load_config:Found Json File"
         with open(config_fn) as json_file:
             config = json.load(json_file)
     else:
-        print "JB - load_config:NOT Found Json File"
         config = {}
 
     return config
-
-'''
-JB - Comment on use
-'''
-def smart_request(cmd_list):
-
-    # Setup Logging
-    log_level = logging.INFO
-    logging.basicConfig(format='%(asctime)-15s %(levelname)-8s %(message)s', level=log_level)
-    logging.getLogger("requests").setLevel(logging.WARNING)
-
-
-    # Load parameters from config file
-    # Assumes smartthings_cli_key was run first to create the config
-    config = load_config()
-
-    client_id = None
-    if 'client_id' in config:
-        client_id = config['client_id']
-
-    if not client_id:
-		logging.error('client_id missing from config!')
-		return None
-
-    client_secret = None
-    if 'client_secret' in config:
-        client_secret = config['client_secret']
-
-    if not client_secret:
-		logging.error('client_secret missing from config!')
-		return None
-
-    access_token = None
-    if 'access_token' in config:
-        access_token = config['access_token']
-
-    endpoint_base_url = None
-    if 'endpoint_base_url' in config:
-        endpoint_base_url = config['endpoint_base_url']
-
-    endpoint_url = None
-    if 'endpoint_url' in config:
-        endpoint_url = config['endpoint_url']
-
-    if not access_token:
-		logging.error('access_token missing from config!')
-		return None
-
-    # Query Smartthings Server
-    if not endpoint_url or not endpoint_base_url:
-        endpoint_base_url, endpoint_url = get_endpoint_url(access_token)
-        config['endpoint_base_url'] = endpoint_base_url
-        config['endpoint_url'] = endpoint_url
-
-    dev_lists = {}
-
-    valid_device_types = [
-        'switch',
-        'motion',
-        'temperature',
-        'humidity',
-        'contact',
-        'acceleration',
-        'presence',
-        'battery',
-        'threeAxis'
-    ]
-
-    while len(cmd_list):
-        cmd = cmd_list.pop(0)
-
-        if cmd == 'set':
-            device_type = cmd_list.pop(0)
-            device_name = cmd_list.pop(0)
-            device_cmd = cmd_list.pop(0)
-
-            if not device_type in valid_device_types:
-                logging.error("Invalid device type: %s", device_type)
-                continue
-
-            if not device_type in dev_lists:
-                dev_lists[device_type] = get_status(access_token, endpoint_base_url, endpoint_url, device_type)
-            update_device(access_token, endpoint_base_url, endpoint_url, dev_lists[device_type], device_type, device_name, device_cmd)
-            return None
-            
-
-        devices=[]
-        if cmd == 'query':
-            device_type = cmd_list.pop(0)
-            device_name = cmd_list.pop(0)
-
-            if not device_type in valid_device_types:
-                logging.error("Invalid device type: %s", device_type)
-                continue
-
-            if not device_type in dev_lists:
-                dev_lists[device_type] = get_status(access_token, endpoint_base_url, endpoint_url, device_type)
-
-            if device_name == 'all':
-                for device_name in dev_lists[device_type]:
-                    device_state = dev_lists[device_type][device_name]['state']
-                    #logging.info('%s %s: %s', device_type, device_name, device_state)
-                    devices.append({"type":device_type, "name":device_name, "state":device_state})
-                    
-            else:
-                if not device_name in dev_lists[device_type]:
-                    logging.error('%s "%s" does not exist!', device_type, device_name)
-                    continue
-                device_state = dev_lists[device_type][device_name]['state']
-                #logging.info('%s %s: %s', device_type, device_name, device_state)
-                devices.append({"type":device_type, "name":device_name, "state":device_state})
-               
-                    
-            return devices
-
-
 
