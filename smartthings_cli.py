@@ -40,11 +40,6 @@ from twisted.internet import reactor
 ''' 
 class SmartThings:
 	def __init__(self):
-		# Setup Logging
-		log_level = logging.INFO
-		logging.basicConfig(format='%(asctime)-15s %(levelname)-8s %(message)s', level=log_level)
-		logging.getLogger("requests").setLevel(logging.WARNING)
-		
 		#Load Config
 		self.config=load_config()
 		

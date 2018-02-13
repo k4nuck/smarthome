@@ -27,6 +27,7 @@ import time
 import os
 import sys
 import SocketServer
+import logging
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from subprocess import call
@@ -138,10 +139,10 @@ def timer_worker(mainLoopQueue):
 def main():
 	print "JB - Main Loop Start"
 	
-	#smart_main()
-	#smart_start()
-	
-	#return
+	# Setup Logging
+	log_level = logging.INFO
+	logging.basicConfig(format='%(asctime)-15s %(levelname)-8s %(message)s', level=log_level)
+	logging.getLogger("requests").setLevel(logging.WARNING)
 	
 	#Create Smarttings Object
 	smartthings = SmartThings()
