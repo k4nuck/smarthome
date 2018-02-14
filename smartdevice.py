@@ -21,9 +21,10 @@ from smartcontroller import *
 class SmartDevice:
 	smartcontroller=None
 	
+	#JB - Will need to keep track of timestamp of last state change
+	#JB - Should we keep track of state change made manually vs automated
 	def __init__ (self,controller, device_type, device_name):
 		if(SmartDevice.smartcontroller==None):
-			print "JB - Creating SmartController"
 			SmartDevice.smartcontroller = SmartController()
 		self.controller = controller
 		self.device_type = device_type
@@ -39,6 +40,9 @@ class SmartDevice:
 		
 	def get_device_name(self):
 		return self.device_name
+		
+	def get_device_type(self):
+		return self.device_type
 		
 		
 		
