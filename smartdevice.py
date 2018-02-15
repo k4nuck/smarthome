@@ -3,8 +3,10 @@
 
 import os
 import sys
+import time
 
 from smartcontroller import *
+
 
 '''
 	EXAMPLE of use
@@ -21,7 +23,6 @@ from smartcontroller import *
 class SmartDevice:
 	smartcontroller=None
 	
-	#JB - Will need to keep track of timestamp of last state change
 	#JB - Should we keep track of state change made manually vs automated
 	def __init__ (self,controller, device_type, device_name):
 		if(SmartDevice.smartcontroller==None):
@@ -29,6 +30,7 @@ class SmartDevice:
 		self.controller = controller
 		self.device_type = device_type
 		self.device_name = device_name
+		self.time = time.time()
 		
 	def query(self):
 		req = SmartDevice.smartcontroller.query(self.controller, self.device_type, self.device_name)
@@ -43,6 +45,12 @@ class SmartDevice:
 		
 	def get_device_type(self):
 		return self.device_type
+		
+	def get_last_active(self):
+		return self.time
+		
+	def set_last_active(self):
+		self.time = time.time()
 		
 		
 		

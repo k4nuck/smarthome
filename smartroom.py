@@ -38,12 +38,16 @@ class SmartRoom:
 	def get_device(self, device_name):
 		return self.devices[device_name]
 		
-	#JB - Check each motion type if false and has been
-	#JB - False for some delta
-	#def is_room_empty(self)
-	
-	#JB - Set the state of all switches in a room
-	#def set_switches(self, cmd)
+	# Check last time room had movement
+	def get_last_active(self):
+		last_active = None
+		for device in self.motion_devices:
+			if(last_active ==None):
+				last_active = device.get_last_active()
+			elif(last_active < device.get_last_active()):
+				last_active = device. get_last_active()
+				
+		return last_active
 		
 		
 		
