@@ -24,19 +24,25 @@ class SmartRoom:
 		self.motion_devices=[]
 	
 	def add_device(self, device):
-		#Keep track of switches and motion sensors
+		#Keep track of switches and motion sensors names
 		device_name = device.get_device_name()
 		device_type = device.get_device_type()
-		if(device_type=="motion"):
+		if device_type=="motion":
 			self.motion_devices.append(device_name)
-		elif (device_type="switch")
+		elif device_type=="switch":
 			self.switch_devices.append(device_name)
 			
-		# List of devices in a room
+		# Map of devices in a room
 		self.devices[device_name] = device
 		
 	def get_device(self, device_name):
 		return self.devices[device_name]
+		
+	def get_motion_devices(self):
+		return self.motion_devices
+		
+	def get_switch_devices(self):
+		return self.switch_devices
 		
 	# Check last time room had movement
 	def get_last_active(self):

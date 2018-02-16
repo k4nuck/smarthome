@@ -1,0 +1,8 @@
+{ 
+	"rooms":[ 
+		{"name":"Living Room", 
+		 "devices":[ 
+			{"controller":"SAMSUNG", "device_type":"switch", "device_name":"Fan Outlet"} 
+		]} 
+	] 
+} 
