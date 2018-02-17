@@ -26,7 +26,7 @@ class SmartController:
 		
 	def query(self, controller, device_type, device_name):
 		if controller == "SAMSUNG":
-			req = self.smartthings.smart_request(["query",device_type,device_name])	
+			req = self.smartthings.smart_request(["query",device_type,device_name])[0]
 			return req
 		else:
 			print "JB - SmartController:Query:UNKNOWN Controller: "+controller

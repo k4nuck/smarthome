@@ -19,15 +19,16 @@ class SmartHome:
 			self.setup_home_from_json(json_data)
 		
 	def add_room(self,name):
-		self.rooms[name] = SmartHome(name)
+		self.rooms[name] = SmartRoom(name)
 		self.room_names.append(name)
 		
 	def add_device_to_room(self, name, device):
 		# Check if room exist yet
-		if self.rooms.has_key(name):
+		if name in self.rooms:
 			myRoom = self.rooms[name]
 		else:
-			myRoom = self.add_room(name)
+			self.add_room(name)
+			myRoom = self.rooms[name]
 			
 		myRoom.add_device(device)
 		
@@ -44,15 +45,23 @@ class SmartHome:
 		
 	# Use this to create Home for you from JSON
 	def setup_home_from_json(self, json_data): 
-		print json_data
+		#print json_data
 		
 		rooms = json_data["rooms"]
 		
 		for room in rooms:
 			room_name = room["name"]
+			
 			devices = room["devices"]
 			for device in devices:
-				#JB Use add_device_details_to_room
+				controller = device["controller"]
+				device_type = device["device_type"]
+				device_name = device["device_name"]
+				
+				self.add_device_details_to_room(room_name, controller, device_type, device_name)
+				
+				
+		
 
 
 if __name__ == '__main__':
@@ -61,5 +70,22 @@ if __name__ == '__main__':
 		myHome = SmartHome("MyHome", json_data)
 		
 	rooms = myHome.get_room_names()
-	for room in rooms:
-		print "JB - " + room
+	for room_name in rooms:
+		print "JB - " + room_name
+		
+		aRoom = myHome.get_room(room_name)
+		switches = aRoom.get_switch_devices()
+		print "JB - SWITCHES .........."
+		for switch_name in switches:
+			aSwitch = aRoom.get_device(switch_name)
+			print "JB - Name: " + str(aSwitch.query()["name"])
+			print "JB - State: " + str(aSwitch.query()["state"])
+			
+		motion = aRoom.get_motion_devices()
+		print "JB - MOTION .........."
+		for motion_name in motion:
+			aMotion = aRoom.get_device(motion_name)
+			print "JB - Name: " + str(aMotion.query()["name"])
+			print "JB - State: " + str(aMotion.query()["state"])
+			
+		
