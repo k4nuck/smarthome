@@ -8,6 +8,31 @@ import json
 from smartdevice import *
 from smartroom import *
 
+	'''
+	EXAMPLE
+	with open("smarthome_config.json") as json_object:
+		json_data = json.load(json_object)
+		myHome = SmartHome("MyHome", json_data)
+		
+	rooms = myHome.get_room_names()
+	for room_name in rooms:
+		print "JB - " + room_name
+		
+		aRoom = myHome.get_room(room_name)
+		switches = aRoom.get_switch_devices()
+		print "JB - SWITCHES .........."
+		for switch_name in switches:
+			aSwitch = aRoom.get_device(switch_name)
+			print "JB - Name: " + str(aSwitch.query()["name"])
+			print "JB - State: " + str(aSwitch.query()["state"])
+			
+		motion = aRoom.get_motion_devices()
+		print "JB - MOTION .........."
+		for motion_name in motion:
+			aMotion = aRoom.get_device(motion_name)
+			print "JB - Name: " + str(aMotion.query()["name"])
+			print "JB - State: " + str(aMotion.query()["state"])
+	'''
 class SmartHome:
 	
 	# If you dont want to initialize with JSON pass None
@@ -65,6 +90,7 @@ class SmartHome:
 
 
 if __name__ == '__main__':
+	'''
 	with open("smarthome_config.json") as json_object:
 		json_data = json.load(json_object)
 		myHome = SmartHome("MyHome", json_data)
@@ -87,5 +113,6 @@ if __name__ == '__main__':
 			aMotion = aRoom.get_device(motion_name)
 			print "JB - Name: " + str(aMotion.query()["name"])
 			print "JB - State: " + str(aMotion.query()["state"])
+			'''
 			
 		
