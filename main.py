@@ -52,8 +52,10 @@ def web_worker(mainLoopQueue,myHome):
 
 
 def fifo_worker(mainLoopQueue):
-	# Create FIFO File if needed
 	
+	logging.info("FIFO Worker Spawned")
+	
+	# Create FIFO File if needed
 	path = "smart.fifo"
 	if not os.path.exists(path):
 		os.mkfifo(path)
@@ -62,7 +64,7 @@ def fifo_worker(mainLoopQueue):
 	while True:
 		fifo = open(path, "r")
 		for line in fifo:
-			logging.info( "Received: (" + line + ")\n")
+			logging.info( "FIFO;Received: (" + line + ")")
 			
 			if line=="exit":
 				mainLoopQueue.put({'cmd':line, 'data':None})
@@ -73,6 +75,8 @@ def fifo_worker(mainLoopQueue):
 		fifo.close()
 
 def timer_worker(mainLoopQueue):
+	logging.info("TIMER Worker Spawned")
+	
 	#Sleep and then notify parent
 	while True:
 		time.sleep(10)
@@ -82,7 +86,6 @@ def main():
 	# Setup Logging
 	log_level = logging.INFO
 	logging.basicConfig(format='%(asctime)-15s %(levelname)-8s %(message)s', level=log_level)
-	logging.getLogger("requests").setLevel(logging.WARNING)
 	
 	logging.info( "Smart App Started")
 	
@@ -142,7 +145,7 @@ def main():
 					logging.info( "Motion Sensor State: " + str(aMotion.query_state()))
 		
 		if obj["cmd"]=="Web":
-			logging.info( "Smart App:Main Loop: Web - Data:" + obj["data"])
+			logging.info( "Smart App:Main Loop: Web:" + obj["data"])
 			
 		
 		# Handle Exit

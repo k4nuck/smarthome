@@ -5,6 +5,7 @@ import os
 import sys
 import SocketServer
 import logging
+import urlparse
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from smarthome import *
@@ -13,12 +14,17 @@ class SmartWeb(BaseHTTPRequestHandler):
     mainLoopQueue=None
     myHome=None
     
+    def log_message(self, format, *args):
+		return
+		
     def _set_headers(self):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
         
     def get_status_html(self):
+        logging.info("SmartWeb:Getting Status")
+		
         myHTMLlist=[]
         
         myHTMLlist.append("<html>")
@@ -54,6 +60,15 @@ class SmartWeb(BaseHTTPRequestHandler):
 
     def do_GET(self):
         self._set_headers()
+        
+        logging.debug("do_GET:path:" + self.path)
+        
+        # JB - FUTURE: Return a Proper Icon
+        if self.path.find("favicon.ico") != -1:
+			# Found Icon Request
+			logging.debug("do_GET:Found Icon Request")
+			self.wfile.write("<html><body></body></html>")
+			return
         
         # Show Status of Sensors and Switches
         myHTML = self.get_status_html()

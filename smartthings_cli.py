@@ -49,6 +49,9 @@ from twisted.internet import reactor
 ''' 
 class SmartThings:
 	def __init__(self):
+		logging.getLogger("requests").setLevel(logging.WARNING)
+		logging.getLogger("urllib3").setLevel(logging.WARNING)
+		
 		#Load Config
 		self.config=load_config()
 		
@@ -141,7 +144,7 @@ class SmartThings:
 				if device_name == 'all':
 					for device_name in dev_lists[device_type]:
 						device_state = dev_lists[device_type][device_name]['state']
-						#logging.info('%s %s: %s', device_type, device_name, device_state)
+						logging.debug('%s %s: %s', device_type, device_name, device_state)
 						devices.append({"type":device_type, "name":device_name, "state":device_state})
                     
 				else:
@@ -149,7 +152,7 @@ class SmartThings:
 						logging.error('%s "%s" does not exist!', device_type, device_name)
 						continue
 					device_state = dev_lists[device_type][device_name]['state']
-					#logging.info('%s %s: %s', device_type, device_name, device_state)
+					logging.debug('%s %s: %s', device_type, device_name, device_state)
 					devices.append({"type":device_type, "name":device_name, "state":device_state})
                
                     
@@ -168,7 +171,7 @@ def get_endpoint_url(access_token):
     logging.debug('Received endpoint discovery response: %s', req_json)
     endpoint_base_url = req_json[0]['base_url']
     endpoint_url = req_json[0]['url']
-    logging.info('Received endpoint URL: %s%s', endpoint_base_url, endpoint_url)
+    logging.debug('Received endpoint URL: %s%s', endpoint_base_url, endpoint_url)
     return endpoint_base_url, endpoint_url
 
 '''
@@ -211,7 +214,7 @@ def update_device(access_token, endpoint_base_url, endpoint_url, dev_list, devic
         logging.error('%s "%s" does not exist!', device_type, device_name)
         return
 
-    logging.info('Issuing "%s" command to %s "%s"', cmd, device_type, device_name)
+    logging.debug('Issuing "%s" command to %s "%s"', cmd, device_type, device_name)
 
     url = endpoint_base_url + endpoint_url
     url += '/' + device_type
