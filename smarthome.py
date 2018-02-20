@@ -8,31 +8,34 @@ import json
 from smartdevice import *
 from smartroom import *
 
-	'''
-	EXAMPLE
+'''
+Keep Track of Rooms in a House
+Control Enabling / Disabling Devices in a Room
+
+EXAMPLE
 	with open("smarthome_config.json") as json_object:
 		json_data = json.load(json_object)
 		myHome = SmartHome("MyHome", json_data)
 		
 	rooms = myHome.get_room_names()
 	for room_name in rooms:
-		print "JB - " + room_name
+		print room_name
 		
 		aRoom = myHome.get_room(room_name)
 		switches = aRoom.get_switch_devices()
-		print "JB - SWITCHES .........."
+		print "SWITCHES .........."
 		for switch_name in switches:
 			aSwitch = aRoom.get_device(switch_name)
-			print "JB - Name: " + str(aSwitch.query()["name"])
-			print "JB - State: " + str(aSwitch.query()["state"])
+			print "Name: " + switch_name
+			print "State: " + str(aSwitch.query_state())
 			
 		motion = aRoom.get_motion_devices()
-		print "JB - MOTION .........."
+		print "MOTION .........."
 		for motion_name in motion:
 			aMotion = aRoom.get_device(motion_name)
-			print "JB - Name: " + str(aMotion.query()["name"])
-			print "JB - State: " + str(aMotion.query()["state"])
-	'''
+			print "Name: " + motion_name
+			print "State: " + str(aMotion.query_state())	
+'''
 class SmartHome:
 	
 	# If you dont want to initialize with JSON pass None
@@ -68,10 +71,11 @@ class SmartHome:
 	def get_room_names(self):
 		return self.room_names
 		
+	def get_name(self):
+		return self.name
+	
 	# Use this to create Home for you from JSON
 	def setup_home_from_json(self, json_data): 
-		#print json_data
-		
 		rooms = json_data["rooms"]
 		
 		for room in rooms:
@@ -84,35 +88,6 @@ class SmartHome:
 				device_name = device["device_name"]
 				
 				self.add_device_details_to_room(room_name, controller, device_type, device_name)
-				
-				
-		
-
-
-if __name__ == '__main__':
-	'''
-	with open("smarthome_config.json") as json_object:
-		json_data = json.load(json_object)
-		myHome = SmartHome("MyHome", json_data)
-		
-	rooms = myHome.get_room_names()
-	for room_name in rooms:
-		print "JB - " + room_name
-		
-		aRoom = myHome.get_room(room_name)
-		switches = aRoom.get_switch_devices()
-		print "JB - SWITCHES .........."
-		for switch_name in switches:
-			aSwitch = aRoom.get_device(switch_name)
-			print "JB - Name: " + str(aSwitch.query()["name"])
-			print "JB - State: " + str(aSwitch.query()["state"])
-			
-		motion = aRoom.get_motion_devices()
-		print "JB - MOTION .........."
-		for motion_name in motion:
-			aMotion = aRoom.get_device(motion_name)
-			print "JB - Name: " + str(aMotion.query()["name"])
-			print "JB - State: " + str(aMotion.query()["state"])
-			'''
+						
 			
 		

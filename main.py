@@ -31,87 +31,29 @@ import logging
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from subprocess import call
-from smartthings_cli import *
 from smarthome import *
+from smartweb import *
 
-class S(BaseHTTPRequestHandler):
-    mainLoopQueue=None
-    smartthings=None
-    
-    def _set_headers(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/html')
-        self.end_headers()
 
-    def do_GET(self):
-        self._set_headers()
-        
-        #Motion
-        req = self.smartthings.smart_request(["query","motion","all"])
-        motionReqStr=""
-        	
-        for device in req:
-			motionReqStr+= device["name"]+" State: "+str(device["state"]) +"<br>"
-
-        # Switches
-        req = self.smartthings.smart_request(["query","switch","all"])
-        switchReqStr=""
-        	
-        for device in req:
-			switchReqStr+= device["name"]+" State: "+str(device["state"]) +"<br>"
-			
-        myHTML = "<html>" \
-					"<body>" \
-						"<h1> K4nuCK Home Dashboard</h1>" \
-						"<h2>Motion Sensors</h2>" \
-						"<p>"+motionReqStr+"</p>" \
-						"<h2>Switches</h2>" \
-						"<p>"+switchReqStr+"</p>" \
-					"</body>" \
-				 "</html>"
-        
-        self.wfile.write(myHTML)
-        
-
-    def do_HEAD(self):
-        self._set_headers()
-        
-    def do_POST(self):
-        # Doesn't do anything with posted data
-        self._set_headers()
-        
-        content_len = int(self.headers.getheader('content-length', 0))
-        post_body = self.rfile.read(content_len)
-        
-        self.mainLoopQueue.put({'cmd':"Web", 'data':post_body})
-        
-        #print post_body
-        
-        self.wfile.write("<html><body><h1>POST!</h1></body></html>")
-
-def web_worker(mainLoopQueue,smartthings):
-	print "JB - WEB Worker Spawned"
-	
-	#global MainLoopQueue
-	#MainLoopQueue = mainLoopQueue
+def web_worker(mainLoopQueue,myHome):
+	logging.info( "WEB Worker Spawned")
 	
 	server_class=HTTPServer
-	#handler_class=S(mainLoopQueue)
-	handler_class=S
+	handler_class=SmartWeb
 	server_address = ('', 40000)
 	
 	handler_class.mainLoopQueue = mainLoopQueue
-	handler_class.smartthings = smartthings
+	handler_class.myHome = myHome
 	
 	httpd = server_class(server_address, handler_class)
-    
-	print 'JB - Starting httpd...'
+   
+   # Start Web Server
 	httpd.serve_forever()
 
 
 def fifo_worker(mainLoopQueue):
 	# Create FIFO File if needed
-	#path = "/home/pi/projects/Smartthings/smart.fifo"
+	
 	path = "smart.fifo"
 	if not os.path.exists(path):
 		os.mkfifo(path)
@@ -120,7 +62,7 @@ def fifo_worker(mainLoopQueue):
 	while True:
 		fifo = open(path, "r")
 		for line in fifo:
-			print "Received: (" + line + ")\n",
+			logging.info( "Received: (" + line + ")\n")
 			
 			if line=="exit":
 				mainLoopQueue.put({'cmd':line, 'data':None})
@@ -137,15 +79,17 @@ def timer_worker(mainLoopQueue):
 		mainLoopQueue.put({'cmd':"Time", 'data':None})
 
 def main():
-	print "JB - Main Loop Start"
-	
 	# Setup Logging
 	log_level = logging.INFO
 	logging.basicConfig(format='%(asctime)-15s %(levelname)-8s %(message)s', level=log_level)
 	logging.getLogger("requests").setLevel(logging.WARNING)
 	
-	#Create Smarttings Object
-	smartthings = SmartThings()
+	logging.info( "Smart App Started")
+	
+	#Create Smarthome
+	with open("smarthome_config.json") as json_object:
+		json_data = json.load(json_object)
+		myHome = SmartHome("MyHome", json_data)
 	
 	# Create Queue
 	mainLoopQueue = multiprocessing.Queue()
@@ -153,9 +97,9 @@ def main():
 	#Spawn Threads
 	fifo_thread = multiprocessing.Process(target=fifo_worker, args=(mainLoopQueue,))
 	timer_thread = multiprocessing.Process(target=timer_worker, args=(mainLoopQueue,))
-	web_thread = multiprocessing.Process(target=web_worker, args=(mainLoopQueue,smartthings,))
+	web_thread = multiprocessing.Process(target=web_worker, args=(mainLoopQueue,myHome,))
 	
-	print "JB - Main Loop: Calling Start"
+	logging.info( "Smart App: Kicking off threads")
 		
 	#Start Threads
 	fifo_thread.start()
@@ -165,52 +109,45 @@ def main():
 	#Main Loop
 	while True:
 		obj= mainLoopQueue.get()
-		#print "JB - Main Loop:Item:%s" % obj
+		logging.debug("Smart App: Main Loop:Item:%s" % obj)
 		
 		#Handle Timer Interupt
-		#if obj=="Time":
-		#	print "JB - Wake up Time DO WORK!!!!"
+		if obj=="Time":
+			logging.debug( "Wake up Time DO WORK!!!!")
 		
 		#Handle Status
 		if obj["cmd"]=="status":
-			print "JB - Show Status"
-			#os.system("smartthings_cli query switch all")
-			#os.system("smartthings_cli query motion all")
-			#call(["ls", "-ltr"])
+			logging.info( "Show Status")
+			logging.info( "--------------------")
+			logging.info( "Home Name: "+ myHome.get_name())
 			
-			#Switches - smartthings_cli.py vvvv
-			req = smartthings.smart_request(["query","switch","all"])
+			rooms = myHome.get_room_names()
+			for room_name in rooms:
+				logging.info( "-------------------")
+				logging.info( "Room Name: " + room_name)
+		
+				aRoom = myHome.get_room(room_name)
+				switches = aRoom.get_switch_devices()
+				logging.info( ".........SWITCHES ..........")
+				for switch_name in switches:
+					aSwitch = aRoom.get_device(switch_name)
+					logging.info( "Switch Name: " + switch_name)
+					logging.info( "Switch State: " + str(aSwitch.query_state()))
 			
-			for device in req:
-				print "---------------------"
-				print "Type:"+device["type"]
-				print "Name:"+device["name"]
-				print "State:"+str(device["state"])
-				
-			#Motion
-			req = smartthings.smart_request(["query","motion","all"])
-			
-			for device in req:
-				print "---------------------"
-				print "Type:"+device["type"]
-				print "Name:"+device["name"]
-				print "State:"+str(device["state"])
-			
+				motion = aRoom.get_motion_devices()
+				logging.info( "........MOTION ..........")
+				for motion_name in motion:
+					aMotion = aRoom.get_device(motion_name)
+					logging.info( "Motion Sensor Name: " + motion_name)
+					logging.info( "Motion Sensor State: " + str(aMotion.query_state()))
 		
 		if obj["cmd"]=="Web":
-			print "JB = Main Loop: Web - Data:" + obj["data"]
-			#obj["data"].wfile.write("<html><body><h1>K4nuCK Home Dashboard</h1></body></html>")
+			logging.info( "Smart App:Main Loop: Web - Data:" + obj["data"])
+			
 		
 		# Handle Exit
 		if obj["cmd"]=="exit":
-			print "JB - Main Loop:Quitting"
-			
-			# Wait for the worker to finish
-			#mainLoopQueue.close()
-			#mainLoopQueue.join_thread()
-			#pthread.join()
-			
-			print "JB - Main Loop:Item:Qutting:Done" 
+			logging.info( "Smart App: Quitting")
 			fifo_thread.terminate()
 			timer_thread.terminate()
 			web_thread.terminate()

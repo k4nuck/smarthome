@@ -36,7 +36,16 @@ from twisted.web import server, resource
 from twisted.internet import reactor
 
 '''
-' JB - Update with Use
+' Interface for Smartthings 
+' Example of input and output
+' #Switches - smartthings_cli.py vvvv
+'			req = smartthings.smart_request(["query","switch","all"])
+'			
+'			for device in req:
+'				print "---------------------"
+'				print "Type:"+device["type"]
+'				print "Name:"+device["name"]
+'				print "State:"+str(device["state"])
 ''' 
 class SmartThings:
 	def __init__(self):
@@ -223,7 +232,7 @@ def load_config():
     home_dir = os.path.expanduser("~")
     config_fn = os.path.join(home_dir, '.smartthings_cli.json')
 
-    print "Load Config:" + config_fn
+    logging.info( "Load Config:" + config_fn)
 
     if os.path.exists(config_fn):
         with open(config_fn) as json_file:

@@ -3,19 +3,14 @@
 
 import os
 import sys
+import logging
 
 from smartthings_cli import *
 
 '''
-Example of input and output
-#Switches - smartthings_cli.py vvvv
-			req = smartthings.smart_request(["query","switch","all"])
-			
-			for device in req:
-				print "---------------------"
-				print "Type:"+device["type"]
-				print "Name:"+device["name"]
-				print "State:"+str(device["state"])
+' Generic Interface for Smart Devices
+' Current support:
+'      Samsung Smartthings
 '''
 class SmartController:
 	
@@ -29,7 +24,7 @@ class SmartController:
 			req = self.smartthings.smart_request(["query",device_type,device_name])[0]
 			return req
 		else:
-			print "JB - SmartController:Query:UNKNOWN Controller: "+controller
+			logging( "SmartController:Query:UNKNOWN Controller: "+controller)
 			return None
 			
 	def set(self, controller, device_type, device_name, cmd):
@@ -37,9 +32,5 @@ class SmartController:
 			req = self.smartthings.smart_request(["set",device_type,device_name, cmd])	
 			return req
 		else:
-			print "JB - SmartController:Set:UNKNOWN Controller: "+controller
+			logging( "SmartController:Set:UNKNOWN Controller: "+controller)
 			return None
-
-if __name__ == '__main__':
-	'''smart = SmartController()
-	req = smart.set("SAMSUNG","switch","Fan Outlet", "on")'''
