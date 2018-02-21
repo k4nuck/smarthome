@@ -13,12 +13,11 @@ from smartcontroller import *
 	Create a Smart Device 
 	EXAMPLE of use
 		fan = SmartDevice("SAMSUNG", "switch", "Fan Outlet")
-		req = fan.query()
-		for device in req:
-				print "---------------------"
-				print "Type:"+device["type"]
-				print "Name:"+device["name"]
-				print "State:"+str(device["state"])
+		device = fan.query()
+		
+		print "Type:"+device["type"]
+		print "Name:"+device["name"]
+		print "State:"+str(device["state"])
 				
 		fan.set("on")
 '''

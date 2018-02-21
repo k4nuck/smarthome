@@ -112,11 +112,11 @@ def main():
 	#Main Loop
 	while True:
 		obj= mainLoopQueue.get()
-		logging.debug("Smart App: Main Loop:Item:%s" % obj)
+		logging.debug("Smart App: Main Loop:Item:%s" % obj["cmd"])
 		
 		#Handle Timer Interupt
-		if obj=="Time":
-			logging.debug( "Wake up Time DO WORK!!!!")
+		if obj["cmd"]=="Time":
+			myHome.refresh()
 		
 		#Handle Status
 		if obj["cmd"]=="status":
@@ -144,9 +144,9 @@ def main():
 					logging.info( "Motion Sensor Name: " + motion_name)
 					logging.info( "Motion Sensor State: " + str(aMotion.query_state()))
 		
+		# Handle Web Request
 		if obj["cmd"]=="Web":
-			logging.info( "Smart App:Main Loop: Web:" + obj["data"])
-			
+			myHome.handle_device_triggered(obj["data"])
 		
 		# Handle Exit
 		if obj["cmd"]=="exit":

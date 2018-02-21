@@ -88,6 +88,14 @@ class SmartHome:
 				device_name = device["device_name"]
 				
 				self.add_device_details_to_room(room_name, controller, device_type, device_name)
+				
+	#JB - Handle Motion Sensor Triggered
+	def handle_device_triggered(self, device_name):
+		logging.info("SmartHome Device Triggered:" + device_name)
+		
+	#JB - Handle Refresh
+	def refresh(self):
+		logging.debug("SmartHome Refresh")
 						
 			
 		
