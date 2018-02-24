@@ -4,6 +4,7 @@
 import os
 import sys
 import json
+import time
 
 from smartdevice import *
 from smartroom import *
@@ -42,7 +43,9 @@ class SmartHome:
 	def __init__ (self, name, json_data):
 		self.name = name
 		self.rooms = {}
+		self.devices = {}
 		self.room_names = []
+		self.last_refresh = time.time()
 		if(json != None):
 			self.setup_home_from_json(json_data)
 		
@@ -58,10 +61,20 @@ class SmartHome:
 			self.add_room(name)
 			myRoom = self.rooms[name]
 			
+		#Add Device to Room	
 		myRoom.add_device(device)
 		
+		#Update Device Cache
+		name = device.get_name()
+		self.devices[name] = device
+		
 	def add_device_details_to_room(self, room_name, controller, device_type, device_name):
-		aDevice = SmartDevice(controller, device_type, device_name)
+		
+		#Check if Device already Exists
+		if device_name not in self.devices:
+			aDevice = SmartDevice(controller, device_type, device_name)
+		else:
+			aDevice = self.devices[device_name]
 		
 		self.add_device_to_room(room_name, aDevice)
 		
@@ -89,13 +102,27 @@ class SmartHome:
 				
 				self.add_device_details_to_room(room_name, controller, device_type, device_name)
 				
-	#JB - Handle Motion Sensor Triggered
+	# Handle Motion Sensor Triggered
 	def handle_device_triggered(self, device_name):
 		logging.info("SmartHome Device Triggered:" + device_name)
+		
+		# Find Device and update
+		device = self.devices[device_name]
+		device.set_last_active()
+		
+		# Refresh
+		self.refresh()
 		
 	#JB - Handle Refresh
 	def refresh(self):
 		logging.debug("SmartHome Refresh")
-						
-			
+		
+		# Every 10 Minutes check if a room needs a refresh
+		current_time = time.time()
+		if (current_time - self.last_refresh) > 600:
+			self.last_refresh = current_time
+			for room in self.rooms:
+				room.refresh_last_active()
+		
+		# Check last activity in a room
 		

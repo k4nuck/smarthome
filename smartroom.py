@@ -50,6 +50,12 @@ class SmartRoom:
 	def get_name(self):
 		return self.name	
 		
+	# CHeck real status of a motion sensor and update if still active
+	def refresh_last_active(self):
+		for device in self.motion_devices:
+			if device.query_state():
+				device.set_last_active
+		
 	# Check last time room had movement
 	def get_last_active(self):
 		last_active = None
@@ -58,6 +64,16 @@ class SmartRoom:
 				last_active = device.get_last_active()
 			elif(last_active < device.get_last_active()):
 				last_active = device. get_last_active()
-				
 		return last_active
-		
+	
+	# Turn all Switches on in a room			
+	def turn_switches_on_in_room(self):
+		for device_name in self.get_switch_devices():
+			device = self.get_device(device_name)
+			device.set_on()
+	
+	# Turn all Switches off in a room		
+	def turn_switches_off_in_room(self):
+		for device_name in self.get_switch_devices():
+			device = self.get_device(device_name)
+			device.set_off()
