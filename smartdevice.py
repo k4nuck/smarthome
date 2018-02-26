@@ -30,10 +30,22 @@ class SmartDevice:
 		self.controller = controller
 		self.device_type = device_type
 		self.device_name = device_name
-		self.time = time.time()
+		self.device_state =None
+		self.time = 0
+		
+		# Initialize last active based on active
+		self.query()
 		
 	def query(self):
 		req = SmartDevice.smartcontroller.query(self.controller, self.device_type, self.device_name)
+		
+		# If Motion sensor is set to true, update last active time.
+		if req["type"]=="motion":
+			if req["state"]:
+				self.set_last_active()
+		
+		self.device_state = req["state"]
+		
 		return req
 	
 	def query_state(self):
@@ -41,8 +53,23 @@ class SmartDevice:
 		return req["state"]
 			
 	def set(self, cmd):
-		req = SmartDevice.smartcontroller.set(self.controller, self.device_type, self.device_name,cmd)
-		return req
+		if cmd =="on":
+			if self.device_state:
+				logging.debug("Device Set No OP:"+cmd)
+				return None
+			else:
+				logging.debug("Device Set Make Request:"+cmd)
+				self.device_state = True
+		else:
+			if not self.device_state:
+				logging.debug("Device Set No OP:"+cmd)
+				return None
+			else:
+				logging.debug("Device Set Make Request:"+cmd)
+				self.device_state = False
+				
+		SmartDevice.smartcontroller.set(self.controller, self.device_type, self.device_name,cmd)
+		return None
 		
 	def set_on(self):
 		return self.set("on")

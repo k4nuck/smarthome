@@ -79,7 +79,7 @@ def timer_worker(mainLoopQueue):
 	
 	#Sleep and then notify parent
 	while True:
-		time.sleep(10)
+		time.sleep(60)
 		mainLoopQueue.put({'cmd':"Time", 'data':None})
 
 def main():

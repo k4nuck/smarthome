@@ -45,7 +45,9 @@ class SmartHome:
 		self.rooms = {}
 		self.devices = {}
 		self.room_names = []
-		self.last_refresh = time.time()
+		self.last_refresh = 0
+		
+		# Load Home
 		if(json != None):
 			self.setup_home_from_json(json_data)
 		
@@ -65,8 +67,9 @@ class SmartHome:
 		myRoom.add_device(device)
 		
 		#Update Device Cache
-		name = device.get_name()
+		name = device.get_device_name()
 		self.devices[name] = device
+		
 		
 	def add_device_details_to_room(self, room_name, controller, device_type, device_name):
 		
@@ -89,6 +92,8 @@ class SmartHome:
 	
 	# Use this to create Home for you from JSON
 	def setup_home_from_json(self, json_data): 
+		logging.info("Creating Home from JSON")
+		
 		rooms = json_data["rooms"]
 		
 		for room in rooms:
@@ -102,6 +107,9 @@ class SmartHome:
 				
 				self.add_device_details_to_room(room_name, controller, device_type, device_name)
 				
+		# Refresh After new Devices added
+		self.refresh()
+				
 	# Handle Motion Sensor Triggered
 	def handle_device_triggered(self, device_name):
 		logging.info("SmartHome Device Triggered:" + device_name)
@@ -113,16 +121,32 @@ class SmartHome:
 		# Refresh
 		self.refresh()
 		
-	#JB - Handle Refresh
+	# Handle Refresh
 	def refresh(self):
-		logging.debug("SmartHome Refresh")
+		logging.info("---------Start--------------")
+		logging.info("SmartHome Refresh")
 		
 		# Every 10 Minutes check if a room needs a refresh
 		current_time = time.time()
 		if (current_time - self.last_refresh) > 600:
+			logging.info("SmartHome:Full Refresh after 10 Minutes")
 			self.last_refresh = current_time
-			for room in self.rooms:
-				room.refresh_last_active()
+			for room_name in self.room_names:
+				self.rooms[room_name].refresh_last_active()
 		
 		# Check last activity in a room
+		# If last Active was within 15 minutes turn on Room Lights
+		for room_name in self.room_names:
+			room = self.rooms[room_name]
+			if (current_time - room.get_last_active()) > 900:
+				logging.info("SmartHome:Refresh:Turn Room Off:" + room.get_name())
+				logging.debug("SmartHome:Refresh:current_time:" + str(current_time))
+				logging.debug("SmartHome:Refresh:Room time:" + str(room.get_last_active()))
+				room.turn_switches_off_in_room()
+			else:
+				logging.info("SmartHome:Refresh:Turn Room On:" + room.get_name())
+				logging.debug("SmartHome:Refresh:current_time:" + str(current_time))
+				logging.debug("SmartHome:Refresh:Room time:" + str(room.get_last_active()))
+				room.turn_switches_on_in_room()
 		
+		logging.info("----------End-------------")

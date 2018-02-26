@@ -52,14 +52,16 @@ class SmartRoom:
 		
 	# CHeck real status of a motion sensor and update if still active
 	def refresh_last_active(self):
-		for device in self.motion_devices:
+		for device_name in self.motion_devices:
+			device = self.get_device(device_name)
 			if device.query_state():
 				device.set_last_active
 		
 	# Check last time room had movement
 	def get_last_active(self):
 		last_active = None
-		for device in self.motion_devices:
+		for device_name in self.motion_devices:
+			device = self.get_device(device_name)
 			if(last_active ==None):
 				last_active = device.get_last_active()
 			elif(last_active < device.get_last_active()):
