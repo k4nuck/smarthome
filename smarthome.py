@@ -123,13 +123,13 @@ class SmartHome:
 		
 	# Handle Refresh
 	def refresh(self):
-		logging.info("---------Start--------------")
-		logging.info("SmartHome Refresh")
+		logging.debug("---------Start--------------")
+		logging.debug("SmartHome Refresh")
 		
 		# Every 10 Minutes check if a room needs a refresh
 		current_time = time.time()
 		if (current_time - self.last_refresh) > 600:
-			logging.info("SmartHome:Full Refresh after 10 Minutes")
+			logging.debug("SmartHome:Full Refresh after 10 Minutes")
 			self.last_refresh = current_time
 			for room_name in self.room_names:
 				self.rooms[room_name].refresh_last_active()
@@ -138,15 +138,18 @@ class SmartHome:
 		# If last Active was within 15 minutes turn on Room Lights
 		for room_name in self.room_names:
 			room = self.rooms[room_name]
+			logging.debug("SmartHome:Room Name:"+room_name)
+			logging.debug("SmartHome:Last Active:"+str(room.get_last_active()))
+			
 			if (current_time - room.get_last_active()) > 900:
-				logging.info("SmartHome:Refresh:Turn Room Off:" + room.get_name())
+				logging.debug("SmartHome:Refresh:Turn Room Off:" + room.get_name())
 				logging.debug("SmartHome:Refresh:current_time:" + str(current_time))
 				logging.debug("SmartHome:Refresh:Room time:" + str(room.get_last_active()))
 				room.turn_switches_off_in_room()
 			else:
-				logging.info("SmartHome:Refresh:Turn Room On:" + room.get_name())
+				logging.debug("SmartHome:Refresh:Turn Room On:" + room.get_name())
 				logging.debug("SmartHome:Refresh:current_time:" + str(current_time))
 				logging.debug("SmartHome:Refresh:Room time:" + str(room.get_last_active()))
 				room.turn_switches_on_in_room()
 		
-		logging.info("----------End-------------")
+		logging.debug("----------End-------------")

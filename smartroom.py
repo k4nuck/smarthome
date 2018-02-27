@@ -55,17 +55,22 @@ class SmartRoom:
 		for device_name in self.motion_devices:
 			device = self.get_device(device_name)
 			if device.query_state():
-				device.set_last_active
+				device.set_last_active()
 		
 	# Check last time room had movement
 	def get_last_active(self):
 		last_active = None
 		for device_name in self.motion_devices:
 			device = self.get_device(device_name)
+			
+			logging.debug("Get Last Active:"+device_name)
+			logging.debug("Device Time:"+ str(device.get_last_active()))
+			logging.debug("Device ID:"+str(hex(id(device))))
+			
 			if(last_active ==None):
 				last_active = device.get_last_active()
 			elif(last_active < device.get_last_active()):
-				last_active = device. get_last_active()
+				last_active = device.get_last_active()
 		return last_active
 	
 	# Turn all Switches on in a room			

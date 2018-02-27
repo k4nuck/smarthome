@@ -4,22 +4,19 @@
 		 "devices":[ 
 			{"controller":"SAMSUNG", "device_type":"switch", "device_name":"Left Living Room Light"},
 			{"controller":"SAMSUNG", "device_type":"switch", "device_name":"Right Living Room Light"},
-			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Garage Door Motion Sensor"},
-			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Living Room"}  
+			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Garage Door Motion Sensor"}
 		]}, 
 		{"name":"Kitchen", 
 		 "devices":[ 
 			{"controller":"SAMSUNG", "device_type":"switch", "device_name":"Kitchen Light"},
 			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Kitchen Sensor"}, 
 			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Hallway Sensor"},
-			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Dining Room Sensor"},
-			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Kitchen"}
+			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Dining Room Sensor"}
 		]},
 		{"name":"Kitchen Table", 
 		 "devices":[ 
 			{"controller":"SAMSUNG", "device_type":"switch", "device_name":"Kitchen Table Light"},
-			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Garage Door Motion Sensor"},
-			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Kitchen"} 
+			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Garage Door Motion Sensor"}
 		]},
 		{"name":"Playroom", 
 		 "devices":[ 

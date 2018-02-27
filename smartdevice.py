@@ -20,6 +20,12 @@ from smartcontroller import *
 		print "State:"+str(device["state"])
 				
 		fan.set("on")
+		
+	Quick Note On device state.  It purposely doesnt update
+	when manually changing the state of a switch.  Doing that
+	on purpose so that the auto switch doesn't fight with the 
+	human trying to override the state.  
+	After 15 minutes of inactivity auto will resume
 '''
 class SmartDevice:
 	smartcontroller=None
@@ -31,7 +37,7 @@ class SmartDevice:
 		self.device_type = device_type
 		self.device_name = device_name
 		self.device_state =None
-		self.time = 0
+		self.timestamp = 0
 		
 		# Initialize last active based on active
 		self.query()
@@ -40,9 +46,15 @@ class SmartDevice:
 		req = SmartDevice.smartcontroller.query(self.controller, self.device_type, self.device_name)
 		
 		# If Motion sensor is set to true, update last active time.
+		logging.debug("SmartDevice:type:"+req["type"])
 		if req["type"]=="motion":
+			logging.debug("Found Motion: State:"+ str(req["state"]))
 			if req["state"]:
+				logging.debug("Setting Last Active:"+req["name"])
+				logging.debug("Device ID:"+str(hex(id(self))))
+				logging.debug("Current active:"+ str(self.get_last_active()))
 				self.set_last_active()
+				
 		
 		self.device_state = req["state"]
 		
@@ -68,6 +80,7 @@ class SmartDevice:
 				logging.debug("Device Set Make Request:"+cmd)
 				self.device_state = False
 				
+		logging.info("SmartDevice:"+self.device_name+":Set Cmd:"+cmd)
 		SmartDevice.smartcontroller.set(self.controller, self.device_type, self.device_name,cmd)
 		return None
 		
@@ -84,8 +97,9 @@ class SmartDevice:
 		return self.device_type
 		
 	def get_last_active(self):
-		return self.time
+		return self.timestamp
 		
 	def set_last_active(self):
-		self.time = time.time()
+		self.timestamp = time.time()
+		logging.debug("Device Set Last Active:"+str(self.timestamp))
 		
