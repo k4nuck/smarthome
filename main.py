@@ -71,6 +71,9 @@ def fifo_worker(mainLoopQueue):
 				
 			if line=="status":
 				mainLoopQueue.put({'cmd':line, 'data':None})
+				
+			if line=="off" or line=="on":
+				mainLoopQueue.put({'cmd':"onoff", 'data':line})
 						
 		fifo.close()
 
@@ -117,6 +120,15 @@ def main():
 		#Handle Timer Interupt
 		if obj["cmd"]=="Time":
 			myHome.refresh()
+		
+		# Handle Turning the System on or off
+		if obj["cmd"]=="onoff":
+			if obj["data"] == "on":
+				onoff=True
+			else:
+				onoff=False
+				
+			myHome.set_on_off(onoff)
 		
 		#Handle Status
 		if obj["cmd"]=="status":
