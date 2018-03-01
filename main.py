@@ -35,7 +35,7 @@ from smarthome import *
 from smartweb import *
 
 
-def web_worker(mainLoopQueue,myHome):
+def web_worker(mainLoopQueue,myHome, guest_key, admin_key):
 	logging.info( "WEB Worker Spawned")
 	
 	server_class=HTTPServer
@@ -43,6 +43,8 @@ def web_worker(mainLoopQueue,myHome):
 	server_address = ('', 40000)
 	
 	handler_class.mainLoopQueue = mainLoopQueue
+	handler_class.guest_key = guest_key
+	handler_class.admin_key = admin_key
 	handler_class.myHome = myHome
 	
 	httpd = server_class(server_address, handler_class)
@@ -92,6 +94,13 @@ def main():
 	
 	logging.info( "Smart App Started")
 	
+	# Get Webkey
+	with open("/home/pi/.smarthome_key.json") as webkey_object:
+		webkey_data = json.load(webkey_object)
+		guest_key = webkey_data["webkey"]["guest"]
+		admin_key = webkey_data["webkey"]["admin"]
+		logging.debug("guest:"+guest_key+":admin:"+admin_key)
+	
 	#Create Smarthome
 	with open("smarthome_config.json") as json_object:
 		json_data = json.load(json_object)
@@ -103,7 +112,7 @@ def main():
 	#Spawn Threads
 	fifo_thread = multiprocessing.Process(target=fifo_worker, args=(mainLoopQueue,))
 	timer_thread = multiprocessing.Process(target=timer_worker, args=(mainLoopQueue,))
-	web_thread = multiprocessing.Process(target=web_worker, args=(mainLoopQueue,myHome,))
+	web_thread = multiprocessing.Process(target=web_worker, args=(mainLoopQueue,myHome,guest_key, admin_key))
 	
 	logging.info( "Smart App: Kicking off threads")
 		

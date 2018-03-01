@@ -13,6 +13,8 @@ from smarthome import *
 class SmartWeb(BaseHTTPRequestHandler):
     mainLoopQueue=None
     myHome=None
+    guest_key = None
+    admin_key = None
     
     def log_message(self, format, *args):
 		return
@@ -22,8 +24,8 @@ class SmartWeb(BaseHTTPRequestHandler):
         self.send_header('Content-type', 'text/html')
         self.end_headers()
         
-    def get_status_html(self):
-        logging.info("SmartWeb:Getting Status")
+    def get_status_html(self, guestMode, adminMode):
+        logging.info("SmartWeb:Getting Status:Guest:"+str(guestMode)+":admin:"+str(adminMode))
 		
         myHTMLlist=[]
         
@@ -70,8 +72,22 @@ class SmartWeb(BaseHTTPRequestHandler):
 			self.wfile.write("<html><body></body></html>")
 			return
         
+        #Check for guest or admin key
+        if self.path.find(self.guest_key) != -1:
+			guestMode=True
+			adminMode=False
+        elif self.path.find(self.admin_key) != -1:
+			guestMode = False
+			adminMode = True
+        else:
+			#guestMode = False
+			#adminMode = False
+			#NO ACCESS
+			self.wfile.write("<html><body><h1>Access Denied</h1></body></html>")
+			return
+        
         # Show Status of Sensors and Switches
-        myHTML = self.get_status_html()
+        myHTML = self.get_status_html(guestMode, adminMode)
         self.wfile.write(myHTML)
         
 
