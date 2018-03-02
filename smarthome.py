@@ -154,10 +154,17 @@ class SmartHome:
 		# check if a room needs a refresh - Set in configuration
 		current_time = time.time()
 		if (current_time - self.last_refresh) > self.get_refresh_time():
-			logging.debug("SmartHome:Full Refresh after 10 Minutes")
+			logging.debug("SmartHome:Full Refresh after "+str(self.get_refresh_time()) +" Seconds")
 			self.last_refresh = current_time
 			for room_name in self.room_names:
-				self.rooms[room_name].refresh_last_active()
+				room = self.rooms[room_name]
+				
+				#If Expired then switches are already off.  Nothing to do
+				if (current_time - room.get_last_active()) > self.get_activity_time():
+					logging.debug("My Home Refresh: No Need to Refresh:"+ room_name)
+				else:
+					#Full Refresh .. In case Motion Sensors are constantly active.
+					room.refresh_last_active()
 		
 		# Check last activity in a room
 		# activity time set in configuration

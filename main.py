@@ -74,6 +74,7 @@ def fifo_worker(mainLoopQueue):
 			if line=="status":
 				mainLoopQueue.put({'cmd':line, 'data':None})
 				
+			#JB - Send update to web that system status changed.  Pipe()
 			if line=="off" or line=="on":
 				mainLoopQueue.put({'cmd':"onoff", 'data':line})
 						

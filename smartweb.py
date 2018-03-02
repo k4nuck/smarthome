@@ -15,6 +15,7 @@ class SmartWeb(BaseHTTPRequestHandler):
     myHome=None
     guest_key = None
     admin_key = None
+    system_status = True
     
     def log_message(self, format, *args):
 		return
@@ -31,7 +32,7 @@ class SmartWeb(BaseHTTPRequestHandler):
         
         myHTMLlist.append("<html>")
         myHTMLlist.append("<body>")
-        myHTMLlist.append("<h1>K4nuCK Home Dashboard</h1>")
+        myHTMLlist.append("<h1>K4nuCK Home Dashboard - System Status:"+str(self.system_status)+"</h1>")
         
         rooms = self.myHome.get_room_names()
         for room_name in rooms:
@@ -80,11 +81,21 @@ class SmartWeb(BaseHTTPRequestHandler):
 			guestMode = False
 			adminMode = True
         else:
-			#guestMode = False
-			#adminMode = False
 			#NO ACCESS
 			self.wfile.write("<html><body><h1>Access Denied</h1></body></html>")
 			return
+			
+        #If Admin Check if System is enabled/disabled
+        if adminMode:
+			if self.path.find("system=on") != -1:
+				logging.info("SmartWeb:Enabling System")
+				self.system_status = True
+				self.mainLoopQueue.put({'cmd':"onoff", 'data':"on"})
+				
+			if self.path.find("system=off") != -1:
+				logging.info("SmartWeb:Disabling System")
+				self.system_status = False
+				self.mainLoopQueue.put({'cmd':"onoff", 'data':"off"})
         
         # Show Status of Sensors and Switches
         myHTML = self.get_status_html(guestMode, adminMode)

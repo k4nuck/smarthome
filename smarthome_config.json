@@ -1,5 +1,5 @@
 {
-	"settings":{"refresh":600, "activity":900},
+	"settings":{"refresh":30, "activity":60},
 	"rooms":[ 
 		{"name":"Living Room", 
 		 "devices":[ 
