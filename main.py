@@ -28,6 +28,7 @@ import os
 import sys
 import SocketServer
 import logging
+from logging.handlers import RotatingFileHandler
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from subprocess import call
@@ -58,7 +59,7 @@ def fifo_worker(mainLoopQueue):
 	logging.info("FIFO Worker Spawned")
 	
 	# Create FIFO File if needed
-	path = "smart.fifo"
+	path = "/home/pi/projects/smarthome/smart.fifo"
 	if not os.path.exists(path):
 		os.mkfifo(path)
 	
@@ -93,6 +94,15 @@ def main():
 	log_level = logging.INFO
 	logging.basicConfig(format='%(asctime)-15s %(levelname)-8s %(message)s', level=log_level)
 	
+	#hdlr = logging.FileHandler('smarthome.log')
+	hdlr = RotatingFileHandler("/home/pi/projects/smarthome/smarthome.log", maxBytes=(1048576*5), backupCount=5)
+	logger = logging.getLogger("")
+	
+	formatter = logging.Formatter('%(asctime)-15s %(levelname)-8s %(message)s')
+	hdlr.setFormatter(formatter)
+	
+	logger.addHandler(hdlr)
+	
 	logging.info( "Smart App Started")
 	
 	# Get Webkey
@@ -103,7 +113,7 @@ def main():
 		logging.debug("guest:"+guest_key+":admin:"+admin_key)
 	
 	#Create Smarthome
-	with open("smarthome_config.json") as json_object:
+	with open("/home/pi/projects/smarthome/smarthome_config.json") as json_object:
 		json_data = json.load(json_object)
 		myHome = SmartHome("MyHome", json_data)
 	

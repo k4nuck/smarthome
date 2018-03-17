@@ -32,7 +32,13 @@ class SmartWeb(BaseHTTPRequestHandler):
         
         myHTMLlist.append("<html>")
         myHTMLlist.append("<body>")
-        myHTMLlist.append("<h1>K4nuCK Home Dashboard - System Status:"+str(self.system_status)+"</h1>")
+        myHTMLlist.append("<h1>K4nuCK Home Dashboard</h1>")
+        myHTMLlist.append("<h2>System Status:"+str(self.system_status)+" - Admin:"+str(adminMode)+"</h2>")
+        
+        refresh = self.myHome.get_refresh_time()
+        activity = self.myHome.get_activity_time()
+        
+        myHTMLlist.append("<h2>Refresh Reset Time:"+str(refresh)+" - Activity Reset Time:"+str(activity)+"</h2>")
         
         rooms = self.myHome.get_room_names()
         for room_name in rooms:
@@ -89,12 +95,12 @@ class SmartWeb(BaseHTTPRequestHandler):
         if adminMode:
 			if self.path.find("system=on") != -1:
 				logging.info("SmartWeb:Enabling System")
-				self.system_status = True
+				SmartWeb.system_status = True
 				self.mainLoopQueue.put({'cmd':"onoff", 'data':"on"})
 				
 			if self.path.find("system=off") != -1:
 				logging.info("SmartWeb:Disabling System")
-				self.system_status = False
+				SmartWeb.system_status = False
 				self.mainLoopQueue.put({'cmd':"onoff", 'data':"off"})
         
         # Show Status of Sensors and Switches

@@ -7,6 +7,7 @@ import logging
 import time
 
 from smartthings_cli import *
+from pyharmony import client as harmony_client
 
 '''
 ' Generic Interface for Smart Devices
@@ -57,14 +58,37 @@ class SmartController:
 		
 		return self.smartthings_cache[device_type][device_name]
 		
+	def harmony_query(self, device_type, device_name):
+		data = {"type":device_type, "name":device_name, "state":False}
+		
+		#JB - This IP and PORT need to be in a config
+		ip = "192.168.1.59"
+		port ="5222"
+		activity_callback=None
+		client = harmony_client.create_and_connect_client(ip, port, activity_callback)
+	
+		config = client.get_config()
+		current_activity_id = client.get_current_activity()
+		activity = [x for x in config['activity'] if int(x['id']) == current_activity_id][0]
+		
+		if activity['label'] == "Power Off":
+			data["state"] = False
+		else:
+			data["state"] = True
+		
+		return data	
+		
 	def query(self, controller, device_type, device_name):
 		if controller == "SAMSUNG":
 			return self.smartthings_query_cache(device_type, device_name)
+		if controller == "HARMONY":
+			return self.harmony_query(device_type,device_name)
 		else:
 			logging.warning( "SmartController:Query:UNKNOWN Controller: "+controller)
 			return None
 			
 	def set(self, controller, device_type, device_name, cmd):
+		#JB - Support Set for HARMONY Devices
 		if controller == "SAMSUNG":
 			req = self.smartthings.smart_request(["set",device_type,device_name, cmd])	
 			return req

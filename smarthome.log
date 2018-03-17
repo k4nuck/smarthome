@@ -1,0 +1,358 @@
+Smart App Started
+Creating Home from JSON
+Load Config:/home/pi/.smartthings_cli.json
+SmartDevice:Left Living Room Light:Set Cmd:off
+SmartDevice:Right Living Room Light:Set Cmd:off
+SmartHome Refresh Time:Refresh Time:300
+SmartHome Refresh Time:Activity Time:600
+Smart App: Kicking off threads
+FIFO Worker Spawned
+TIMER Worker Spawned
+WEB Worker Spawned
+SmartHome Device Triggered:Living Room Sensor
+SmartDevice:Left Living Room Light:Set Cmd:on
+SmartDevice:Right Living Room Light:Set Cmd:on
+FIFO;Received: (exit)
+Smart App: Quitting
+2018-03-17 15:55:23,330 INFO     Smart App Started
+2018-03-17 15:55:23,332 INFO     Creating Home from JSON
+2018-03-17 15:55:23,332 INFO     Load Config:/home/pi/.smartthings_cli.json
+2018-03-17 15:55:24,025 INFO     SmartDevice:Left Living Room Light:Set Cmd:off
+2018-03-17 15:55:24,569 INFO     SmartDevice:Right Living Room Light:Set Cmd:off
+2018-03-17 15:55:25,155 INFO     SmartHome Refresh Time:Refresh Time:300
+2018-03-17 15:55:25,155 INFO     SmartHome Refresh Time:Activity Time:600
+2018-03-17 15:55:25,162 INFO     Smart App: Kicking off threads
+2018-03-17 15:55:25,181 INFO     WEB Worker Spawned
+2018-03-17 15:55:25,185 INFO     FIFO Worker Spawned
+2018-03-17 15:55:25,187 INFO     TIMER Worker Spawned
+2018-03-17 15:57:02,318 INFO     FIFO;Received: (exit)
+2018-03-17 15:57:02,322 INFO     Smart App: Quitting
+2018-03-17 15:57:20,189 INFO     Smart App Started
+2018-03-17 15:57:20,191 INFO     Creating Home from JSON
+2018-03-17 15:57:20,192 INFO     Load Config:/home/pi/.smartthings_cli.json
+2018-03-17 15:57:20,870 INFO     SmartHome Refresh Time:Refresh Time:300
+2018-03-17 15:57:20,873 INFO     SmartHome Refresh Time:Activity Time:600
+2018-03-17 15:57:20,880 INFO     Smart App: Kicking off threads
+2018-03-17 15:57:20,896 INFO     TIMER Worker Spawned
+2018-03-17 15:57:20,899 INFO     FIFO Worker Spawned
+2018-03-17 15:57:20,900 INFO     WEB Worker Spawned
+2018-03-17 15:57:35,648 INFO     FIFO;Received: (exit)
+2018-03-17 15:57:35,653 INFO     Smart App: Quitting
+2018-03-17 15:57:52,127 INFO     Smart App Started
+2018-03-17 15:57:52,129 INFO     Creating Home from JSON
+2018-03-17 15:57:52,129 INFO     Load Config:/home/pi/.smartthings_cli.json
+2018-03-17 15:57:53,037 INFO     SmartHome Refresh Time:Refresh Time:300
+2018-03-17 15:57:53,042 INFO     SmartHome Refresh Time:Activity Time:600
+2018-03-17 15:57:53,050 INFO     Smart App: Kicking off threads
+2018-03-17 15:57:53,064 INFO     FIFO Worker Spawned
+2018-03-17 15:57:53,068 INFO     TIMER Worker Spawned
+2018-03-17 15:57:53,080 INFO     WEB Worker Spawned
+2018-03-17 15:58:21,579 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 15:58:21,582 INFO     SmartDevice:Left Living Room Light:Set Cmd:on
+2018-03-17 15:58:22,252 INFO     SmartDevice:Right Living Room Light:Set Cmd:on
+2018-03-17 15:59:14,751 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 15:59:49,466 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 16:02:37,357 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 16:03:54,066 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 16:05:02,723 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 16:06:08,970 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 16:07:35,714 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 16:09:17,177 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 16:14:23,772 INFO     Smart App Started
+2018-03-17 16:14:23,775 INFO     Creating Home from JSON
+2018-03-17 16:14:23,776 INFO     Load Config:/root/.smartthings_cli.json
+2018-03-17 16:14:23,776 ERROR    client_id missing from config!
+2018-03-17 16:18:34,887 INFO     Smart App Started
+2018-03-17 16:18:34,888 INFO     Creating Home from JSON
+2018-03-17 16:18:34,889 INFO     Load Config:/root/.smartthings_cli.json
+2018-03-17 16:18:35,553 INFO     SmartDevice:Left Living Room Light:Set Cmd:off
+2018-03-17 16:18:36,309 INFO     SmartDevice:Right Living Room Light:Set Cmd:off
+2018-03-17 16:18:36,982 INFO     SmartHome Refresh Time:Refresh Time:300
+2018-03-17 16:18:36,985 INFO     SmartHome Refresh Time:Activity Time:600
+2018-03-17 16:18:37,000 INFO     Smart App: Kicking off threads
+2018-03-17 16:18:37,013 INFO     FIFO Worker Spawned
+2018-03-17 16:18:37,016 INFO     TIMER Worker Spawned
+2018-03-17 16:18:37,028 INFO     WEB Worker Spawned
+2018-03-17 16:18:54,626 INFO     SmartWeb:Getting Status:Guest:True:admin:False
+2018-03-17 16:19:09,936 INFO     FIFO;Received: (exit)
+2018-03-17 16:19:09,945 INFO     Smart App: Quitting
+2018-03-17 16:28:37,477 INFO     Smart App Started
+2018-03-17 16:28:37,483 INFO     Creating Home from JSON
+2018-03-17 16:28:37,484 INFO     Load Config:/home/pi/.smartthings_cli.json
+2018-03-17 16:28:38,219 INFO     SmartHome Refresh Time:Refresh Time:300
+2018-03-17 16:28:38,222 INFO     SmartHome Refresh Time:Activity Time:600
+2018-03-17 16:28:38,237 INFO     Smart App: Kicking off threads
+2018-03-17 16:28:38,251 INFO     FIFO Worker Spawned
+2018-03-17 16:28:38,255 INFO     TIMER Worker Spawned
+2018-03-17 16:28:38,257 INFO     WEB Worker Spawned
+2018-03-17 16:56:13,875 INFO     Smart App Started
+2018-03-17 16:56:13,878 INFO     Creating Home from JSON
+2018-03-17 16:56:13,879 INFO     Load Config:/home/pi/.smartthings_cli.json
+2018-03-17 16:56:14,608 INFO     SmartDevice:Left Living Room Light:Set Cmd:on
+2018-03-17 16:56:15,159 INFO     SmartDevice:Right Living Room Light:Set Cmd:on
+2018-03-17 16:56:15,700 INFO     SmartHome Refresh Time:Refresh Time:300
+2018-03-17 16:56:15,702 INFO     SmartHome Refresh Time:Activity Time:600
+2018-03-17 16:56:15,717 INFO     Smart App: Kicking off threads
+2018-03-17 16:56:15,730 INFO     FIFO Worker Spawned
+2018-03-17 16:56:15,735 INFO     TIMER Worker Spawned
+2018-03-17 16:56:15,737 INFO     WEB Worker Spawned
+2018-03-17 16:57:50,588 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:00:46,403 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:05:46,178 INFO     Smart App Started
+2018-03-17 17:05:46,182 INFO     Creating Home from JSON
+2018-03-17 17:05:46,183 INFO     Load Config:/root/.smartthings_cli.json
+2018-03-17 17:05:46,941 INFO     SmartHome Refresh Time:Refresh Time:300
+2018-03-17 17:05:46,946 INFO     SmartHome Refresh Time:Activity Time:600
+2018-03-17 17:05:46,962 INFO     Smart App: Kicking off threads
+2018-03-17 17:05:46,977 INFO     FIFO Worker Spawned
+2018-03-17 17:05:46,984 INFO     WEB Worker Spawned
+2018-03-17 17:05:46,989 INFO     TIMER Worker Spawned
+2018-03-17 17:08:17,226 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:09:32,769 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:11:30,954 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:12:15,656 INFO     SmartWeb:Getting Status:Guest:True:admin:False
+2018-03-17 17:12:55,104 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:15:56,820 INFO     Smart App Started
+2018-03-17 17:15:56,825 INFO     Creating Home from JSON
+2018-03-17 17:15:56,827 INFO     Load Config:/root/.smartthings_cli.json
+2018-03-17 17:15:57,538 INFO     SmartDevice:Left Living Room Light:Set Cmd:off
+2018-03-17 17:15:58,251 INFO     SmartDevice:Right Living Room Light:Set Cmd:off
+2018-03-17 17:15:58,871 INFO     SmartHome Refresh Time:Refresh Time:300
+2018-03-17 17:15:58,876 INFO     SmartHome Refresh Time:Activity Time:600
+2018-03-17 17:15:58,890 INFO     Smart App: Kicking off threads
+2018-03-17 17:15:58,904 INFO     FIFO Worker Spawned
+2018-03-17 17:15:58,914 INFO     TIMER Worker Spawned
+2018-03-17 17:15:58,925 INFO     WEB Worker Spawned
+2018-03-17 17:17:55,397 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:17:55,400 INFO     SmartDevice:Left Living Room Light:Set Cmd:on
+2018-03-17 17:17:56,183 INFO     SmartDevice:Right Living Room Light:Set Cmd:on
+2018-03-17 17:19:36,785 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:21:31,177 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:24:19,269 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 17:24:19,272 INFO     SmartDevice:Kitchen Table Light:Set Cmd:on
+2018-03-17 17:24:20,128 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 17:24:20,130 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 17:24:20,131 INFO     SmartDevice:Kitchen Light:Set Cmd:on
+2018-03-17 17:24:20,715 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 17:25:12,703 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 17:25:12,825 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 17:25:13,587 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 17:25:14,017 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 17:25:16,007 INFO     SmartHome Device Triggered:Playroom Sensor
+2018-03-17 17:25:16,010 INFO     SmartDevice:Play Room Outlet:Set Cmd:on
+2018-03-17 17:28:30,337 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:30:09,516 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:31:50,766 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 17:31:51,309 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 17:31:52,833 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 17:31:54,079 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 17:32:38,461 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:35:21,882 INFO     SmartDevice:Play Room Outlet:Set Cmd:off
+2018-03-17 17:38:03,164 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:39:09,065 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:39:31,288 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 17:39:34,824 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 17:39:35,116 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 17:40:15,301 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 17:40:15,571 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 17:40:15,952 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 17:40:16,813 INFO     SmartHome Device Triggered:Playroom Sensor
+2018-03-17 17:40:16,816 INFO     SmartDevice:Play Room Outlet:Set Cmd:on
+2018-03-17 17:40:22,723 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 17:42:11,184 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:44:42,951 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:46:32,395 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:47:03,526 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 17:47:03,710 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 17:47:03,747 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 17:49:12,754 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 17:49:13,082 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 17:49:17,594 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 17:49:17,777 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 17:49:18,302 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:50:22,653 INFO     SmartDevice:Play Room Outlet:Set Cmd:off
+2018-03-17 17:51:18,763 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:54:22,714 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:57:32,279 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 17:59:23,179 INFO     SmartDevice:Kitchen Light:Set Cmd:off
+2018-03-17 17:59:24,045 INFO     SmartDevice:Kitchen Table Light:Set Cmd:off
+2018-03-17 18:03:18,765 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:06:43,540 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:08:30,761 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:09:16,845 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:09:21,732 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:09:21,734 INFO     SmartDevice:Kitchen Table Light:Set Cmd:on
+2018-03-17 18:09:22,468 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:11:09,222 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:13:55,786 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:16:05,059 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:17:13,241 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:17:47,046 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:17:53,641 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:19:50,045 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:20:56,584 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:21:31,329 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:22:30,817 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:22:32,515 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:22:35,735 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:22:35,738 INFO     SmartDevice:Kitchen Light:Set Cmd:on
+2018-03-17 18:22:37,402 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:23:16,367 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:25:55,621 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:25:55,656 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:25:58,516 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:26:03,902 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:26:06,462 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:26:37,832 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:27:02,566 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:27:25,229 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:27:25,245 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:27:32,827 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:27:32,882 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:27:50,303 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:27:52,254 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:27:53,724 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:27:54,505 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:28:07,755 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:28:08,106 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:29:26,521 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:29:26,549 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:29:38,625 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:29:55,741 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:30:07,547 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:30:07,684 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:30:28,114 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:30:34,733 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:30:36,273 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:30:37,972 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:30:56,693 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:31:11,643 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:33:17,851 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:33:54,273 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:35:14,977 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:36:54,702 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:38:40,754 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:39:02,815 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:39:10,895 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:39:20,536 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:39:54,312 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:40:15,913 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:40:47,521 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:40:57,896 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:41:40,131 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:41:41,586 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:41:44,146 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:42:13,953 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:42:15,874 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:42:26,927 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:43:16,355 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:43:19,492 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:43:56,569 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:43:56,842 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:44:02,067 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:44:14,238 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:44:14,406 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:44:33,954 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:44:35,103 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:45:07,432 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:45:08,259 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:45:17,704 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:45:26,320 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:45:27,172 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:45:38,361 INFO     SmartHome Device Triggered:Playroom Sensor
+2018-03-17 18:45:38,363 INFO     SmartDevice:Play Room Outlet:Set Cmd:on
+2018-03-17 18:45:49,354 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:45:50,821 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:45:51,202 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:46:10,912 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:46:46,008 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:46:47,552 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:47:09,281 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:47:09,433 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:47:09,477 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:47:11,675 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:47:52,000 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:51:06,144 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:51:06,991 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:51:11,574 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:51:11,692 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:52:14,085 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:52:15,714 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:52:57,745 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:54:05,583 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:54:49,111 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:55:07,031 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:55:08,002 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:55:10,005 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:55:35,895 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:55:40,057 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:55:40,059 INFO     SmartDevice:Play Room Outlet:Set Cmd:off
+2018-03-17 18:55:41,173 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:55:56,682 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:56:15,966 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:56:16,447 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:56:58,288 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:57:04,913 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:57:08,656 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:57:09,119 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:57:27,213 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 18:57:58,226 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:58:04,005 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:58:04,196 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 18:58:04,357 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 18:58:29,884 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 18:58:30,652 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:59:23,398 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 18:59:47,488 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 19:00:27,431 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 19:00:51,544 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 19:00:55,715 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 19:01:08,642 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 19:01:09,427 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 19:01:10,311 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 19:01:49,362 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 19:01:49,497 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 19:01:52,294 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 19:01:52,797 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 19:02:22,367 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 19:02:46,167 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 19:06:06,684 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 19:07:31,236 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 19:07:37,073 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 19:07:41,574 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 19:07:41,812 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 19:08:06,326 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 19:08:07,764 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 19:08:09,004 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 19:08:46,417 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 19:08:48,147 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 19:08:53,417 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 19:10:50,251 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 19:11:41,807 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 19:11:53,317 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 19:12:12,768 INFO     SmartHome Device Triggered:Living Room Sensor
+2018-03-17 19:12:29,555 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 19:14:20,187 INFO     Smart App Started
+2018-03-17 19:14:20,189 INFO     Creating Home from JSON
+2018-03-17 19:14:20,190 INFO     Load Config:/home/pi/.smartthings_cli.json
+2018-03-17 19:14:22,885 INFO     SmartDevice:Kitchen Light:Set Cmd:off
+2018-03-17 19:14:23,555 INFO     SmartDevice:Kitchen Table Light:Set Cmd:off
+2018-03-17 19:14:24,392 INFO     SmartHome Refresh Time:Refresh Time:300
+2018-03-17 19:14:24,393 INFO     SmartHome Refresh Time:Activity Time:600
+2018-03-17 19:14:24,400 INFO     Smart App: Kicking off threads
+2018-03-17 19:14:24,417 INFO     FIFO Worker Spawned
+2018-03-17 19:14:24,421 INFO     TIMER Worker Spawned
+2018-03-17 19:14:24,427 INFO     WEB Worker Spawned
+2018-03-17 19:14:24,612 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 19:14:24,615 INFO     SmartDevice:Kitchen Table Light:Set Cmd:on
+2018-03-17 19:14:26,248 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 19:14:37,593 INFO     SmartWeb:Getting Status:Guest:True:admin:False
+2018-03-17 19:14:43,392 INFO     SmartHome Device Triggered:Kitchen Sensor
+2018-03-17 19:14:43,395 INFO     SmartDevice:Kitchen Light:Set Cmd:on
+2018-03-17 19:14:44,115 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 19:15:01,203 INFO     SmartWeb:Getting Status:Guest:True:admin:False
+2018-03-17 19:16:52,214 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 19:18:10,904 INFO     SmartHome Device Triggered:Kitchen Table Sensor
+2018-03-17 19:18:20,384 INFO     SmartHome Device Triggered:Garage Door Sensor
+2018-03-17 19:18:20,545 INFO     SmartHome Device Triggered:Dining Room Sensor
+2018-03-17 19:18:22,832 INFO     SmartHome Device Triggered:Living Room Sensor

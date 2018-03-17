@@ -1,11 +1,12 @@
 {
-	"settings":{"refresh":30, "activity":60},
+	"settings":{"refresh":300, "activity":600},
 	"rooms":[ 
 		{"name":"Living Room", 
 		 "devices":[ 
 			{"controller":"SAMSUNG", "device_type":"switch", "device_name":"Left Living Room Light"},
 			{"controller":"SAMSUNG", "device_type":"switch", "device_name":"Right Living Room Light"},
-			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Living Room Sensor"}
+			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Living Room Sensor"},
+			{"controller":"HARMONY", "device_type":"motion", "device_name":"Harmony Hub"}
 		]}, 
 		{"name":"Kitchen", 
 		 "devices":[ 
