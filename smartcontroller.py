@@ -69,9 +69,12 @@ class SmartController:
 	
 		config = client.get_config()
 		current_activity_id = client.get_current_activity()
+		
+		client.disconnect(send_close=True)
+		
 		activity = [x for x in config['activity'] if int(x['id']) == current_activity_id][0]
 		
-		if activity['label'] == "Power Off":
+		if activity['label'] == "PowerOff":
 			data["state"] = False
 		else:
 			data["state"] = True

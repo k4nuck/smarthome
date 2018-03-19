@@ -33,17 +33,23 @@ class SmartWeb(BaseHTTPRequestHandler):
         myHTMLlist.append("<html>")
         myHTMLlist.append("<body>")
         myHTMLlist.append("<h1>K4nuCK Home Dashboard</h1>")
-        myHTMLlist.append("<h2>System Status:"+str(self.system_status)+" - Admin:"+str(adminMode)+"</h2>")
+        myHTMLlist.append("<p style=\"text-indent :2em;\">System Status:"+str(self.system_status)+" - Admin:"+str(adminMode)+"</p>")
         
         refresh = self.myHome.get_refresh_time()
         activity = self.myHome.get_activity_time()
         
-        myHTMLlist.append("<h2>Refresh Reset Time:"+str(refresh)+" - Activity Reset Time:"+str(activity)+"</h2>")
+        myHTMLlist.append("<p style=\"text-indent :2em;\">Refresh Reset Time:"+str(refresh)+" - Activity Reset Time:"+str(activity)+"</p>")
         
         rooms = self.myHome.get_room_names()
         for room_name in rooms:
 			myHTMLlist.append("<h2>"+room_name+"</h2>")
 			aRoom = self.myHome.get_room(room_name)
+			
+			#Some Room Info
+			sun = aRoom.get_sun_data()
+			lights_stay_off = aRoom.should_lights_stay_off()
+			
+			myHTMLlist.append("<p style=\"text-indent :2em;\">Sunrise: "+str(sun["sunrise"])+" - Sunset: "+str(sun["sunset"])+" - Force Lights Off: "+str(lights_stay_off)+"</p>")
 			
 			#Motion Sensors
 			devices = aRoom.get_motion_devices()
