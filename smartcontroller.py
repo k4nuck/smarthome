@@ -22,6 +22,13 @@ class SmartController:
 		self.smartthings_cache={}
 		self.smartthings_cache_timestamp=None
 		self.smartthings=SmartThings()
+		
+		# Get Config Data for Harmony Hub
+		with open("/home/pi/.harmony_settings.json") as harmony_object:
+			harmony_data = json.load(harmony_object)
+			self.ip = harmony_data["ip"]
+			self.port = harmony_data["port"]
+			logging.debug("ip:"+self.ip+" - port:"+self.port)
 	
 	def update_smartthings_cache(self):
 		logging.debug("Update Smartthings Cache")
@@ -61,9 +68,9 @@ class SmartController:
 	def harmony_query(self, device_type, device_name):
 		data = {"type":device_type, "name":device_name, "state":False}
 		
-		#JB - This IP and PORT need to be in a config
-		ip = "192.168.1.59"
-		port ="5222"
+		#This IP and PORT from config
+		ip = self.ip
+		port = self.port
 		activity_callback=None
 		client = harmony_client.create_and_connect_client(ip, port, activity_callback)
 	

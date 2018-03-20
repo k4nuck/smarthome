@@ -109,11 +109,18 @@ class SmartHome:
 		settings = json_data["settings"]
 		self.refresh_time = settings["refresh"]
 		self.activity_time = settings["activity"]
+		city = settings["city"]
+		
+		# Set City for Rooms
+		SmartRoom.City = city
 		
 		rooms = json_data["rooms"]
 		
 		for room in rooms:
 			room_name = room["name"]
+			allow_force_off = room["allow_force_off"] 
+			sunset_offset = room["sunset_offset"] 
+			sunrise_offset = room["sunrise_offset"] 
 			
 			devices = room["devices"]
 			for device in devices:
@@ -123,6 +130,17 @@ class SmartHome:
 				
 				self.add_device_details_to_room(room_name, controller, device_type, device_name)
 				
+			#Room Should Created.  Get and Set Properties
+			aRoom = self.rooms[room_name]
+			aRoom.set_allow_force_off(allow_force_off)
+			aRoom.set_sunset_offset(sunset_offset)
+			aRoom.set_sunrise_offset(sunrise_offset)
+			
+			logging.debug("SmartHome:Name:"+room_name)
+			logging.debug("SmartHome Load Data:force Off:"+ str(allow_force_off))
+			logging.debug("SmartHome Load Data:sunset offset:"+ str(sunset_offset))
+			logging.debug("SmartHome Load Data:sunrise offset:"+ str(sunrise_offset))
+			
 		# Refresh After new Devices added
 		self.refresh()
 				

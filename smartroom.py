@@ -22,24 +22,48 @@ from smartdevice import *
 '''
 class SmartRoom:
 	CalendarInfo=None
+	City = None
 	
 	def __init__ (self, name):
 		self.name = name
 		self.devices = {}
 		self.switch_devices=[]
 		self.motion_devices=[]
+		self.allow_force_off = True
+		self.sunset_offset = 0
+		self.sunrise_offset = 0
 		
 		# Only initialize once
 		if SmartRoom.CalendarInfo == None:
 			SmartRoom.CalendarInfo = self.update_calendar_info()
+	
+	def set_allow_force_off(self, force_off):
+		self.allow_force_off = force_off
+		
+	def set_sunset_offset(self, sunset_offset):
+		self.sunset_offset = sunset_offset
+		
+	def set_sunrise_offset(self, sunrise_offset):
+		self.sunrise_offset = sunrise_offset
+		
+	def get_allow_force_off(self):
+		return self.allow_force_off
+		
+	def get_sunset_offset(self):
+		return self.sunset_offset
+		
+	def get_sunrise_offset(self):
+		return self.sunrise_offset
 		
 	def update_calendar_info(self):
 		calendarInfo = {}
 		
-		#JB - Config this
-		city_name = 'New York'
+		# From Config 
+		city_name = SmartRoom.City
 		astral = Astral()
 		astral.solar_depression = 'civil'
+
+		logging.info("Update Calendar Info:City:"+ str(city_name))
 
 		# Get City Data
 		city = astral[city_name]
@@ -117,14 +141,23 @@ class SmartRoom:
 		
 	#Check if Lights should be allowed on in this room
 	def should_lights_stay_off(self):
+		# First Check if this Room ever forces off
+		if not self.get_allow_force_off():
+			logging.info("should_lights_stay_off:NEVER:"+self.get_name())
+			return False
+			
+		sunset_offset = self.get_sunset_offset()
+		sunrise_offset = self.get_sunrise_offset()
+		
+		
 		logging.debug("In should_lights_stay_off")
 		lights_stay_off = False
 		sun = self.get_sun_data()
 		
 		# Sunset and Sunrise Information
 		# Offset by an hour window
-		sunset = sun['sunset'] - timedelta(hours=1)
-		sunrise = sun['sunrise'] + timedelta(hours=1)
+		sunset = sun['sunset'] + timedelta(hours=sunset_offset)
+		sunrise = sun['sunrise'] + timedelta(hours=sunrise_offset)
 
 		logging.debug("Sunset(offset):"+ str(sunset))
 		logging.debug("Sunrise(offset):"+ str(sunrise))

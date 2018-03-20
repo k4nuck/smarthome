@@ -50,7 +50,11 @@ class SmartWeb(BaseHTTPRequestHandler):
 			lights_stay_off = aRoom.should_lights_stay_off()
 			
 			myHTMLlist.append("<p style=\"text-indent :2em;\">Sunrise: "+str(sun["sunrise"])+" - Sunset: "+str(sun["sunset"])+" - Force Lights Off: "+str(lights_stay_off)+"</p>")
-			
+			if aRoom.get_allow_force_off():
+				myHTMLlist.append("<p style=\"text-indent :2em;\">Sunrise Offset: "+str(aRoom.get_sunrise_offset()) + " hours - Sunset Offset:"+str(aRoom.get_sunset_offset())+" hours</p>")
+			else:
+				myHTMLlist.append("<p style=\"text-indent :2em;\">DO NOT ALLOW FORCE OFF</p>")
+				
 			#Motion Sensors
 			devices = aRoom.get_motion_devices()
 			myHTMLlist.append("<h3>Motion Sensors</h3>")

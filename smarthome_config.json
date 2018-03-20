@@ -1,26 +1,38 @@
 {
-	"settings":{"refresh":300, "activity":600},
+	"settings":{"refresh":300, "activity":600, "city":"New York"},
 	"rooms":[ 
-		{"name":"Living Room", 
+		{"name":"Living Room",
+		 "allow_force_off":true,
+		 "sunset_offset":-1,
+		 "sunrise_offset":1, 
 		 "devices":[ 
 			{"controller":"SAMSUNG", "device_type":"switch", "device_name":"Left Living Room Light"},
 			{"controller":"SAMSUNG", "device_type":"switch", "device_name":"Right Living Room Light"},
 			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Living Room Sensor"},
 			{"controller":"HARMONY", "device_type":"motion", "device_name":"Harmony Hub"}
 		]}, 
-		{"name":"Kitchen", 
+		{"name":"Kitchen",
+		 "allow_force_off":false,
+		 "sunset_offset":-1,
+		 "sunrise_offset":1, 
 		 "devices":[ 
 			{"controller":"SAMSUNG", "device_type":"switch", "device_name":"Kitchen Light"},
 			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Kitchen Sensor"}, 
 			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Dining Room Sensor"}
 		]},
-		{"name":"Kitchen Table", 
+		{"name":"Kitchen Table",
+		 "allow_force_off":true,
+		 "sunset_offset":-1,
+		 "sunrise_offset":1, 
 		 "devices":[ 
 			{"controller":"SAMSUNG", "device_type":"switch", "device_name":"Kitchen Table Light"},
 			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Garage Door Sensor"},
 			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Kitchen Table Sensor"}
 		]},
-		{"name":"Playroom", 
+		{"name":"Playroom",
+		 "allow_force_off":true,
+		 "sunset_offset":-1,
+		 "sunrise_offset":1, 
 		 "devices":[ 
 			{"controller":"SAMSUNG", "device_type":"switch", "device_name":"Play Room Outlet"},
 			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Playroom Sensor"}
