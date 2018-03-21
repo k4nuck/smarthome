@@ -1,5 +1,5 @@
 # Smart Home Server
-Purpose of this server is automatically Turn On/Off Smart Devices in a House
+Purpose of this server is to automatically Turn On/Off Smart Devices in a House
 
 # Usage
    '''
