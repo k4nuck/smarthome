@@ -232,7 +232,7 @@ def update_device(access_token, endpoint_base_url, endpoint_url, dev_list, devic
 '''
 def load_config():
     """Load the script's configuration from a JSON file"""
-    home_dir = os.path.expanduser("~")
+    home_dir = os.path.expanduser("/home/pi/")
     config_fn = os.path.join(home_dir, '.smartthings_cli.json')
 
     logging.info( "Load Config:" + config_fn)

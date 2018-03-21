@@ -1,5 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#
+#  smarthome.py
+#  
+#  Copyright 2018  <pi@raspberrypi>
+#  Joseph Bersito
+#  
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#  
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+#  
+# 
 
 import os
 import sys
@@ -48,6 +70,7 @@ class SmartHome:
 		self.last_refresh = 0
 		self.on = True
 		
+		# Default Refresh Rates if not in Config
 		self.refresh_time=300
 		self.activity_time=600
 		
@@ -59,14 +82,18 @@ class SmartHome:
 		logging.info("SmartHome Refresh Time:Activity Time:"+str(self.get_activity_time()))
 			
 	
+	# Enable/Disable the System
 	def set_on_off(self, onoff):
 		logging.info("MyHome Turning System:" + str(onoff))
 		self.on=onoff
 		
+	# Create a Room and Add it to Home
 	def add_room(self,name):
 		self.rooms[name] = SmartRoom(name)
 		self.room_names.append(name)
 		
+	# Add a device to a room
+	# Will Create a room if it needs
 	def add_device_to_room(self, name, device):
 		# Check if room exist yet
 		if name in self.rooms:
@@ -83,6 +110,7 @@ class SmartHome:
 		self.devices[name] = device
 		
 		
+	# Create a Device and Add it to a room
 	def add_device_details_to_room(self, room_name, controller, device_type, device_name):
 		
 		#Check if Device already Exists
@@ -93,16 +121,19 @@ class SmartHome:
 		
 		self.add_device_to_room(room_name, aDevice)
 		
+	# Return a room object from a name
 	def get_room(self, name):
 		return self.rooms[name]
 		
+	# Return the names of all rooms in a home
 	def get_room_names(self):
 		return self.room_names
 		
+	# Return name of a room
 	def get_name(self):
 		return self.name
 	
-	# Use this to create Home for you from JSON
+	# Use this to create Home from JSON
 	def setup_home_from_json(self, json_data): 
 		logging.info("Creating Home from JSON")
 		
@@ -110,9 +141,13 @@ class SmartHome:
 		self.refresh_time = settings["refresh"]
 		self.activity_time = settings["activity"]
 		city = settings["city"]
+		weather_loc_id = settings["weather_loc_id"]
 		
 		# Set City for Rooms
 		SmartRoom.City = city
+		
+		# Set Weather Id
+		SmartRoom.Weather_Loc_Id = weather_loc_id
 		
 		rooms = json_data["rooms"]
 		
@@ -121,6 +156,7 @@ class SmartHome:
 			allow_force_off = room["allow_force_off"] 
 			sunset_offset = room["sunset_offset"] 
 			sunrise_offset = room["sunrise_offset"] 
+			weather_offset = room["weather_offset"]
 			
 			devices = room["devices"]
 			for device in devices:
@@ -130,16 +166,18 @@ class SmartHome:
 				
 				self.add_device_details_to_room(room_name, controller, device_type, device_name)
 				
-			#Room Should Created.  Get and Set Properties
+			#Room Should be Created.  Get and Set Properties
 			aRoom = self.rooms[room_name]
 			aRoom.set_allow_force_off(allow_force_off)
 			aRoom.set_sunset_offset(sunset_offset)
 			aRoom.set_sunrise_offset(sunrise_offset)
+			aRoom.set_weather_offset(weather_offset)
 			
 			logging.debug("SmartHome:Name:"+room_name)
 			logging.debug("SmartHome Load Data:force Off:"+ str(allow_force_off))
 			logging.debug("SmartHome Load Data:sunset offset:"+ str(sunset_offset))
 			logging.debug("SmartHome Load Data:sunrise offset:"+ str(sunrise_offset))
+			logging.debug("SmartHome Load Data:weather offset:"+ str(weather_offset))
 			
 		# Refresh After new Devices added
 		self.refresh()
@@ -155,12 +193,15 @@ class SmartHome:
 		# Refresh
 		self.refresh()
 		
+	# Return if the system is active
 	def is_system_on(self):
 		return self.on
 		
+	# Return time in seconds of when the system will poll devices
 	def get_refresh_time(self):
 		return self.refresh_time
-		
+	
+	# Return time in seconds of when a room should turn off its devices if no activity
 	def get_activity_time(self):
 		return self.activity_time
 		

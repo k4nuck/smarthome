@@ -1,5 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#
+#  smartweb.py
+#  
+#  Copyright 2018  <pi@raspberrypi>
+#  Joseph Bersito
+#  
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#  
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+#  
+# 
 
 import os
 import sys
@@ -25,6 +47,7 @@ class SmartWeb(BaseHTTPRequestHandler):
         self.send_header('Content-type', 'text/html')
         self.end_headers()
         
+    # Return HTML that shows the status of the system
     def get_status_html(self, guestMode, adminMode):
         logging.info("SmartWeb:Getting Status:Guest:"+str(guestMode)+":admin:"+str(adminMode))
 		
@@ -48,24 +71,30 @@ class SmartWeb(BaseHTTPRequestHandler):
 			#Some Room Info
 			sun = aRoom.get_sun_data()
 			lights_stay_off = aRoom.should_lights_stay_off()
+			weather = aRoom.get_weather_data()
+			weather_offset = aRoom.get_weather_offset()
+			forecast = weather["forecast"]
+			day_of_week = weather["day_of_week"]
+			location = weather["location"]
 			
 			myHTMLlist.append("<p style=\"text-indent :2em;\">Sunrise: "+str(sun["sunrise"])+" - Sunset: "+str(sun["sunset"])+" - Force Lights Off: "+str(lights_stay_off)+"</p>")
 			if aRoom.get_allow_force_off():
 				myHTMLlist.append("<p style=\"text-indent :2em;\">Sunrise Offset: "+str(aRoom.get_sunrise_offset()) + " hours - Sunset Offset:"+str(aRoom.get_sunset_offset())+" hours</p>")
+				myHTMLlist.append("<p style=\"text-indent :2em;\">Location: "+location+" - Day of Week: " +day_of_week+ " - Forecast: "+forecast+" - Weather Offset: "+str(weather_offset)+" hours</p>")
 			else:
 				myHTMLlist.append("<p style=\"text-indent :2em;\">DO NOT ALLOW FORCE OFF</p>")
 				
-			#Motion Sensors
-			devices = aRoom.get_motion_devices()
-			myHTMLlist.append("<h3>Motion Sensors</h3>")
+			#Switches
+			devices = aRoom.get_switch_devices()
+			myHTMLlist.append("<h3>Switches</h3>")
 			for device_name in devices:
 				aDevice = aRoom.get_device(device_name)
 				state = aDevice.query_state()
 				myHTMLlist.append("<p style=\"text-indent :2em;\">"+device_name+": "+str(state)+"</p>")
 				
-			#Switches
-			devices = aRoom.get_switch_devices()
-			myHTMLlist.append("<h3>Switches</h3>")
+			#Motion Sensors
+			devices = aRoom.get_motion_devices()
+			myHTMLlist.append("<h3>Motion Sensors</h3>")
 			for device_name in devices:
 				aDevice = aRoom.get_device(device_name)
 				state = aDevice.query_state()
@@ -121,6 +150,7 @@ class SmartWeb(BaseHTTPRequestHandler):
     def do_HEAD(self):
         self._set_headers()
         
+    # IFTTT gets events from Motion Sensors being triggered and sends the event to this web server
     def do_POST(self):
         # Doesn't do anything with posted data
         self._set_headers()

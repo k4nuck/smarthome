@@ -4,6 +4,7 @@
 #  main.py
 #  
 #  Copyright 2018  <pi@raspberrypi>
+#  Joseph Bersito
 #  
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -35,7 +36,7 @@ from subprocess import call
 from smarthome import *
 from smartweb import *
 
-
+# Process to Handle all Web Events
 def web_worker(mainLoopQueue,myHome, guest_key, admin_key):
 	logging.info( "WEB Worker Spawned")
 	
@@ -53,7 +54,7 @@ def web_worker(mainLoopQueue,myHome, guest_key, admin_key):
    # Start Web Server
 	httpd.serve_forever()
 
-
+# Process for sending commands to the server from command line
 def fifo_worker(mainLoopQueue):
 	
 	logging.info("FIFO Worker Spawned")
@@ -81,6 +82,7 @@ def fifo_worker(mainLoopQueue):
 						
 		fifo.close()
 
+# Process for notifying server of delta time has passed
 def timer_worker(mainLoopQueue):
 	logging.info("TIMER Worker Spawned")
 	
@@ -89,18 +91,15 @@ def timer_worker(mainLoopQueue):
 		time.sleep(60)
 		mainLoopQueue.put({'cmd':"Time", 'data':None})
 
+# Main Server
 def main():
 	# Setup Logging
 	log_level = logging.INFO
 	logging.basicConfig(format='%(asctime)-15s %(levelname)-8s %(message)s', level=log_level)
-	
-	#hdlr = logging.FileHandler('smarthome.log')
 	hdlr = RotatingFileHandler("/home/pi/projects/smarthome/smarthome.log", maxBytes=(1048576*5), backupCount=5)
 	logger = logging.getLogger("")
-	
 	formatter = logging.Formatter('%(asctime)-15s %(levelname)-8s %(message)s')
 	hdlr.setFormatter(formatter)
-	
 	logger.addHandler(hdlr)
 	
 	logging.info( "Smart App Started")

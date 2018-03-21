@@ -1,5 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#
+#  smartcontroller.py
+#  
+#  Copyright 2018  <pi@raspberrypi>
+#  Joseph Bersito
+#  
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#  
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+#  
+# 
 
 import os
 import sys
@@ -30,6 +52,7 @@ class SmartController:
 			self.port = harmony_data["port"]
 			logging.debug("ip:"+self.ip+" - port:"+self.port)
 	
+	# Since the smartthings access gets values for all devices.  We get it once and cache for some delta
 	def update_smartthings_cache(self):
 		logging.debug("Update Smartthings Cache")
 		
@@ -56,6 +79,7 @@ class SmartController:
 		#Update timestampe
 		self.smartthings_cache_timestamp = time.time()
 	
+	# Query from the cache.  Invalidate if necessary
 	def smartthings_query_cache(self, device_type, device_name):
 		# Check cache - Invalidate after 3 seconds
 		if (self.smartthings_cache_timestamp == None) or ((time.time() - self.smartthings_cache_timestamp) > 3):
@@ -65,6 +89,7 @@ class SmartController:
 		
 		return self.smartthings_cache[device_type][device_name]
 		
+	# Query Harmony Devices
 	def harmony_query(self, device_type, device_name):
 		data = {"type":device_type, "name":device_name, "state":False}
 		
@@ -88,6 +113,7 @@ class SmartController:
 		
 		return data	
 		
+	# Public Accessor to query any type of device
 	def query(self, controller, device_type, device_name):
 		if controller == "SAMSUNG":
 			return self.smartthings_query_cache(device_type, device_name)
@@ -97,6 +123,7 @@ class SmartController:
 			logging.warning( "SmartController:Query:UNKNOWN Controller: "+controller)
 			return None
 			
+	# Public Accessor to set value for any device type
 	def set(self, controller, device_type, device_name, cmd):
 		#JB - Support Set for HARMONY Devices
 		if controller == "SAMSUNG":

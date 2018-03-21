@@ -1,19 +1,26 @@
-# smartthings_cli
-Command line interface to query and control SmartThings devices
+# Smart Home Server
+Purpose of this server is automatically Turn On/Off Smart Devices in a House
 
 # Usage
-1. Log into https://graph.api.smartthings.com/ and under My SmartApps, create a new SmartApp with the code in groovy/app.groovy.
-2. Click App Settings and under OAuth, click _Enable OAuth in Smart App_. Note down the _OAuth Client ID_ and _OAuth Client Secret_. Update the _OAuth Client Display_ to _SmartThings CLI Control_. Click _Update_.
-3. Go back to _My SmartApps_ then click on _SmartThings CLI Control_. Click _Publish_ => _For Me_.
-4. Clone the smartthings_cli repository, create a virtualenv if desired, then run the following commands, replacing CLIENTID and CLIENTSECRET with the ID and secret from step 2.
+   '''
+   USAGE HERE
+   '''
 
-    ```
-    python setup.py install
-    smartthings_cli --clientid CLIENTID --clientsecret CLIENTSECRET
-    ```
+# Python Module Dependency
+1. SocketServer
+2. BaseHTTPServer
+3. Socket
+4. Twisted
+5. urlparse
+6. json
+7. datetime
+8. astral
+9. pywapi
 
-5. smartthings_cli will direct you to a URL to authorized access. Go to that URL in a browser and specify which devices the CLI should be able to access. Click _Authorize_ when finished. You should be redirected to a page reporting _smartthings_cli.py received auth code_.
-6. You can now use smartthings_cli.py to query and control devices managed by SmartThings. Examples:
-  1. `smartthings_cli query switch all`
-  2. `smartthings_cli query switch "Switch Name"`
-  3. `smartthings_cli set switch "Switch Name" on`
+# External Files Dependency
+1. /home/pi/projects/smarthome/smart.fifo
+2. /home/pi/projects/smarthome/smarthome.log
+3. /home/pi/.smarthome_key.json
+4. /home/pi/projects/smarthome/smarthome_config.json
+5. /home/pi/.smartthings_cli.json
+6. /home/pi/.harmony_settings.json
