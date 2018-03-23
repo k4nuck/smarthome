@@ -2,9 +2,9 @@
 Purpose of this server is to automatically Turn On/Off Smart Devices in a House
 
 # Usage
-   '''
+   ```
    USAGE HERE
-   '''
+   ```
 
 # Python Module Dependency
 1. SocketServer
@@ -27,6 +27,6 @@ Purpose of this server is to automatically Turn On/Off Smart Devices in a House
 
 # Future
 1. Try Using Kinect Sensors to check if a room is empty
-	'''
+	```
 	https://sites.google.com/site/hntuan94/home/kinect/-2-connect-kinect-to-raspberry-pi-2-using-libfreenect
-	'''
+	```
