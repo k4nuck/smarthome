@@ -24,3 +24,9 @@ Purpose of this server is to automatically Turn On/Off Smart Devices in a House
 4. /home/pi/projects/smarthome/smarthome_config.json
 5. /home/pi/.smartthings_cli.json
 6. /home/pi/.harmony_settings.json
+
+# Future
+1. Try Using Kinect Sensors to check if a room is empty
+	'''
+	https://sites.google.com/site/hntuan94/home/kinect/-2-connect-kinect-to-raspberry-pi-2-using-libfreenect
+	'''

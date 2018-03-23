@@ -139,6 +139,7 @@ class SmartRoom:
 		
 		# Update Weather Info
 		weatherInfo["current_date"] = date
+		weatherInfo["timestamp"] = time.time()
 		weatherInfo["location"] = weather["location"]["name"]
 		weatherInfo["day_of_week"] = weather["forecasts"][0]["day_of_week"]
 		forecast = weather["forecasts"][0]["day"]["brief_text"]
@@ -173,6 +174,14 @@ class SmartRoom:
 		
 		if date != current_date:
 			logging.info("Get Weather Data: NEW DATE: Updating current_date:"+ str(current_date)+" with:"+ str(date))
+			SmartRoom.WeatherInfo = self.update_weather_info()
+		
+		# Also Refresh after an hour
+		current_timestamp = SmartRoom.WeatherInfo["timestamp"]
+		timestamp = time.time()
+		
+		if timestamp - current_timestamp > 3600:
+			logging.info("Get Weather Data: HOUR PAST")
 			SmartRoom.WeatherInfo = self.update_weather_info()
 			
 		return SmartRoom.WeatherInfo
@@ -247,8 +256,8 @@ class SmartRoom:
 		
 		forecast = weather["forecast"]
 		
-		#If it isnt somewhat Sunny out then offset with weather_offset
-		if forecast.find("Sunny")== -1:
+		#If it isnt somewhat Sunny out or Clearthen offset with weather_offset
+		if forecast.find("Sunny")== -1 and forecast.find("Clear")==-1:
 			weather_offset = self.get_weather_offset()
 			sunset_offset += weather_offset
 			sunrise_offset += weather_offset
