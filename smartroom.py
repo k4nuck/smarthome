@@ -168,6 +168,7 @@ class SmartRoom:
 				forecast = weather["forecasts"][0]["night"]["brief_text"]
 			
 			weatherInfo["forecast"] = forecast
+			weatherInfo["error"] = 0
 		
 			logging.info("Weather Info:day:"+ weatherInfo["day_of_week"])
 			logging.info("Weather Info:Forecast:"+weatherInfo["forecast"])
@@ -178,6 +179,7 @@ class SmartRoom:
 			weatherInfo["location"] = "Unknown Location"
 			weatherInfo["day_of_week"] = "Unknown Day of Week"
 			weatherInfo["forecast"] = "Unknown Weather Conditions"
+			weatherInfo["error"] = 1
 			
 		return weatherInfo
 		
@@ -206,6 +208,11 @@ class SmartRoom:
 		# Also Refresh after an hour
 		current_timestamp = SmartRoom.WeatherInfo["timestamp"]
 		timestamp = time.time()
+		
+		# On Error try again after 5 min
+		if SmartRoom.WeatherInfo["error"] != 0 and (timestamp - current_timestamp > 300):
+			logging.info("Get Weather Data: Refresh Because of Bad Weather Data")
+			SmartRoom.WeatherInfo = self.update_weather_info()
 		
 		if timestamp - current_timestamp > 3600:
 			logging.info("Get Weather Data: HOUR PAST")
