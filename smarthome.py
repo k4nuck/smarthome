@@ -158,6 +158,21 @@ class SmartHome:
 			sunrise_offset = room["sunrise_offset"] 
 			weather_offset = room["weather_offset"]
 			
+			# Get start hh and mm and create a datetime object
+			current = datetime.datetime.now()
+			hh = room["nighttime_start_hh"]
+			mm = room["nighttime_start_mm"]
+			nighttime_start = datetime.datetime(current.year,current.month, current.day,hh,mm)
+			
+			# Get end hh and mm and create datetime object
+			hh = room["nighttime_end_hh"]
+			mm = room["nighttime_end_mm"]
+			nighttime_end = datetime.datetime(current.year,current.month, current.day,hh,mm)
+			
+			# If Start is after end then add a day to end
+			if nighttime_start > nighttime_end:
+				nighttime_end = nighttime_end + datetime.timedelta(days=1)
+			
 			devices = room["devices"]
 			for device in devices:
 				controller = device["controller"]
@@ -172,12 +187,16 @@ class SmartHome:
 			aRoom.set_sunset_offset(sunset_offset)
 			aRoom.set_sunrise_offset(sunrise_offset)
 			aRoom.set_weather_offset(weather_offset)
+			aRoom.set_nighttime_start(nighttime_start)
+			aRoom.set_nighttime_end(nighttime_end)
 			
 			logging.debug("SmartHome:Name:"+room_name)
 			logging.debug("SmartHome Load Data:force Off:"+ str(allow_force_off))
 			logging.debug("SmartHome Load Data:sunset offset:"+ str(sunset_offset))
 			logging.debug("SmartHome Load Data:sunrise offset:"+ str(sunrise_offset))
 			logging.debug("SmartHome Load Data:weather offset:"+ str(weather_offset))
+			logging.debug("SmartHome Load Data: Nighttime Start:"+ str(nighttime_start))
+			logging.debug("SmartHome Load Data: Nighttime End:"+ str(nighttime_end))
 			
 		# Refresh After new Devices added
 		self.refresh()
@@ -219,6 +238,8 @@ class SmartHome:
 				room = self.rooms[room_name]
 				
 				#If Expired then switches are already off.  Nothing to do
+				# Unless the Room is forced off ... then we should do a refresh
+				# JB - DON'T IMPLEMENT this until we start capturing MANUAL overrides
 				if (current_time - room.get_last_active()) > self.get_activity_time():
 					logging.debug("My Home Refresh: No Need to Refresh:"+ room_name)
 				else:
@@ -230,6 +251,7 @@ class SmartHome:
 		if self.is_system_on():
 			for room_name in self.room_names:
 				room = self.rooms[room_name]
+				
 				logging.debug("SmartHome:Room Name:"+room_name)
 				logging.debug("SmartHome:Last Active:"+str(room.get_last_active()))
 			

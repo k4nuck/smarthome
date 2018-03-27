@@ -48,6 +48,8 @@ class SmartRoom:
 	City = None
 	Weather_Loc_Id = None
 	WeatherInfo = None
+	Nighttime_Start = None
+	Nighttime_End = None
 	
 	def __init__ (self, name):
 		self.name = name
@@ -64,6 +66,23 @@ class SmartRoom:
 			SmartRoom.CalendarInfo = self.update_calendar_info()
 		if SmartRoom.WeatherInfo == None:
 			SmartRoom.WeatherInfo = self.update_weather_info()
+	
+	
+	# Set NIght Time Start
+	def set_nighttime_start(self, timestamp):
+		SmartRoom.Nighttime_Start = timestamp
+		
+	# Get NIght Time Start
+	def get_nighttime_start(self):
+		return SmartRoom.Nighttime_Start
+		
+	# Set Night time End
+	def set_nighttime_end(self, timestamp):
+		SmartRoom.Nighttime_End = timestamp
+		
+	# Get Night Time End
+	def get_nighttime_end(self):
+		return SmartRoom.Nighttime_End
 	
 	# Set offset in hours when it isn't sunny out
 	def set_weather_offset(self, weather_offset):
@@ -130,28 +149,36 @@ class SmartRoom:
 		#From Config
 		weather_loc_id = SmartRoom.Weather_Loc_Id
 		
-		# Weather Data
-		date=datetime.date.today()
-		logging.info("Update Weather Info:loc id:"+weather_loc_id)
-		weather = pywapi.get_weather_from_weather_com(weather_loc_id)
+		try:
+			# Weather Data
+			date=datetime.date.today()
+			logging.info("Update Weather Info:loc id:"+weather_loc_id)
+			weather = pywapi.get_weather_from_weather_com(weather_loc_id)
 		
-		logging.info("Update Weather Info:Location:"+ str(weather["location"]["name"]))
+			logging.info("Update Weather Info:Location:"+ str(weather["location"]["name"]))
 		
-		# Update Weather Info
-		weatherInfo["current_date"] = date
-		weatherInfo["timestamp"] = time.time()
-		weatherInfo["location"] = weather["location"]["name"]
-		weatherInfo["day_of_week"] = weather["forecasts"][0]["day_of_week"]
-		forecast = weather["forecasts"][0]["day"]["brief_text"]
+			# Update Weather Info
+			weatherInfo["current_date"] = date
+			weatherInfo["timestamp"] = time.time()
+			weatherInfo["location"] = weather["location"]["name"]
+			weatherInfo["day_of_week"] = weather["forecasts"][0]["day_of_week"]
+			forecast = weather["forecasts"][0]["day"]["brief_text"]
 		
-		if forecast =="":
-			forecast = weather["forecasts"][0]["night"]["brief_text"]
+			if forecast =="":
+				forecast = weather["forecasts"][0]["night"]["brief_text"]
 			
-		weatherInfo["forecast"] = forecast
+			weatherInfo["forecast"] = forecast
 		
-		logging.info("Weather Info:day:"+ weatherInfo["day_of_week"])
-		logging.info("Weather Info:Forecast:"+weatherInfo["forecast"])
-		
+			logging.info("Weather Info:day:"+ weatherInfo["day_of_week"])
+			logging.info("Weather Info:Forecast:"+weatherInfo["forecast"])
+		except:
+			logging.critical("Update Weather Info: Getting Weather Data Failed")
+			weatherInfo["current_date"] = date
+			weatherInfo["timestamp"] = time.time()
+			weatherInfo["location"] = "Unknown Location"
+			weatherInfo["day_of_week"] = "Unknown Day of Week"
+			weatherInfo["forecast"] = "Unknown Weather Conditions"
+			
 		return weatherInfo
 		
 	# Return astral object (Update it if it is a new day)
@@ -225,6 +252,12 @@ class SmartRoom:
 		
 	# Check last time room had movement
 	def get_last_active(self):
+		# If Room should be off then return 0
+		# Do this for the scenario where Force Off is on but the 
+		# lights were already on.  Want them to turn off
+		if self.should_lights_stay_off():
+			return 0
+		
 		last_active = None
 		for device_name in self.motion_devices:
 			device = self.get_device(device_name)
@@ -245,6 +278,11 @@ class SmartRoom:
 		if not self.get_allow_force_off():
 			logging.debug("should_lights_stay_off:NEVER:"+self.get_name())
 			return False
+		
+		# Check if in nighttime mode
+		if self.nighttime_mode():
+			logging.info("Should lights stay off:Night Time mode")
+			return True
 			
 		sunset_offset = self.get_sunset_offset()
 		sunrise_offset = self.get_sunrise_offset()
@@ -257,7 +295,7 @@ class SmartRoom:
 		forecast = weather["forecast"]
 		
 		#If it isnt somewhat Sunny out or Clearthen offset with weather_offset
-		if forecast.find("Sunny")== -1 and forecast.find("Clear")==-1:
+		if forecast.find("Sunny")== -1 and forecast.find("Clear")==-1 and forecast.find("P Cloudy"):
 			weather_offset = self.get_weather_offset()
 			sunset_offset += weather_offset
 			sunrise_offset += weather_offset
@@ -290,6 +328,16 @@ class SmartRoom:
 		
 		
 		return lights_stay_off
+		
+	# Return true if Room currently is in nighttime mode
+	# Meaning the lights shouldn't go on
+	def nighttime_mode(self):
+		current = datetime.datetime.now()
+		
+		if (current > self.get_nighttime_start()) and (current < self.get_nighttime_end()):
+			return True
+		
+		return False
 	
 	# Turn all Switches on in a room			
 	def turn_switches_on_in_room(self):

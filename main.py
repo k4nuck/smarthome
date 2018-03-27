@@ -42,6 +42,8 @@ def web_worker(mainLoopQueue,myHome, guest_key, admin_key):
 	
 	server_class=HTTPServer
 	handler_class=SmartWeb
+	
+	#JB - CONFIG the PORT
 	server_address = ('', 40000)
 	
 	handler_class.mainLoopQueue = mainLoopQueue

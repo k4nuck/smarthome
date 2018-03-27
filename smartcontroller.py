@@ -57,7 +57,12 @@ class SmartController:
 		logging.debug("Update Smartthings Cache")
 		
 		# Get All Smartthings Motion Sensors
-		req = self.smartthings.smart_request(["query","motion","all"])
+		try:
+			req = self.smartthings.smart_request(["query","motion","all"])
+		except:
+			logging.critical("Update Smarthings Cache:Failed Getting Motion Values")
+			return
+			
 		for device in req:
 			if device["type"] not in self.smartthings_cache:
 				self.smartthings_cache[device["type"]] = {}
@@ -66,7 +71,12 @@ class SmartController:
 			self.smartthings_cache[device["type"]][device["name"]] = {"type":device["type"], "name":device["name"], "state":device["state"]}
 			
 		# Get All Smartthings Switches
-		req = self.smartthings.smart_request(["query","switch","all"])
+		try:
+			req = self.smartthings.smart_request(["query","switch","all"])
+		except:
+			logging.critical("Update Smarthings Cache:Failed Getting Switch Values")
+			return
+			
 		for device in req:
 			if device["type"] not in self.smartthings_cache:
 				self.smartthings_cache[device["type"]] = {}
@@ -116,9 +126,18 @@ class SmartController:
 	# Public Accessor to query any type of device
 	def query(self, controller, device_type, device_name):
 		if controller == "SAMSUNG":
-			return self.smartthings_query_cache(device_type, device_name)
+			try:
+				return self.smartthings_query_cache(device_type, device_name)
+			except:
+				logging.critical("Smart Controller Query: Smartthings:Failed")
+				return {"type":"None", "name":"None", "state":False}
+				
 		if controller == "HARMONY":
-			return self.harmony_query(device_type,device_name)
+			try:
+				return self.harmony_query(device_type,device_name)
+			except:
+				logging.critical("Smart Controller Query: Harmony:Failed")
+				return {"type":"None", "name":"None", "state":False}
 		else:
 			logging.warning( "SmartController:Query:UNKNOWN Controller: "+controller)
 			return None
@@ -127,7 +146,12 @@ class SmartController:
 	def set(self, controller, device_type, device_name, cmd):
 		#JB - Support Set for HARMONY Devices
 		if controller == "SAMSUNG":
-			req = self.smartthings.smart_request(["set",device_type,device_name, cmd])	
+			try:
+				req = self.smartthings.smart_request(["set",device_type,device_name, cmd])
+			except:
+				logging.critical("Smart Controller Set:Failed to Set the device")
+				return None
+					
 			return req
 		else:
 			logging.warning( "SmartController:Set:UNKNOWN Controller: "+controller)

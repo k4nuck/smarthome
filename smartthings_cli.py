@@ -182,8 +182,9 @@ def get_status(access_token, endpoint_base_url, endpoint_url, device_type):
     """Query the status and device ID of all devices of one type"""
     url = endpoint_base_url + endpoint_url
     url += '/' + device_type
-
+    
     headers = {'Authorization': 'Bearer ' + access_token}
+    #headers = {'Authorization': 'Bearer ' + access_token+"JB"}
 
     logging.debug('Requesting status from: %s', url)
     req = requests.get(url, headers=headers)

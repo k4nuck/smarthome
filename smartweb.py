@@ -84,6 +84,8 @@ class SmartWeb(BaseHTTPRequestHandler):
 			else:
 				myHTMLlist.append("<p style=\"text-indent :2em;\">DO NOT ALLOW FORCE OFF</p>")
 				
+			myHTMLlist.append("<p style=\"text-indent :2em;\">Night Time Mode: "+str(aRoom.nighttime_mode())+" - Night Time Start: "+str(aRoom.get_nighttime_start())+" - Night Time End: "+str(aRoom.get_nighttime_end())+"</p>") 	
+				
 			#Switches
 			devices = aRoom.get_switch_devices()
 			myHTMLlist.append("<h3>Switches</h3>")
