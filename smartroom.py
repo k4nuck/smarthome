@@ -281,15 +281,15 @@ class SmartRoom:
 		
 	#Check if Lights should be allowed on in this room
 	def should_lights_stay_off(self):
+		# Check if in nighttime mode .. Overrides if Room doesnt allow forcing off.
+		if self.nighttime_mode():
+			logging.debug("Should lights stay off:Night Time mode")
+			return True
+		
 		# First Check if this Room ever forces off
 		if not self.get_allow_force_off():
 			logging.debug("should_lights_stay_off:NEVER:"+self.get_name())
 			return False
-		
-		# Check if in nighttime mode
-		if self.nighttime_mode():
-			logging.info("Should lights stay off:Night Time mode")
-			return True
 			
 		sunset_offset = self.get_sunset_offset()
 		sunrise_offset = self.get_sunrise_offset()
