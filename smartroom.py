@@ -48,8 +48,6 @@ class SmartRoom:
 	City = None
 	Weather_Loc_Id = None
 	WeatherInfo = None
-	Nighttime_Start = None
-	Nighttime_End = None
 	
 	def __init__ (self, name):
 		self.name = name
@@ -60,6 +58,8 @@ class SmartRoom:
 		self.sunset_offset = 0
 		self.sunrise_offset = 0
 		self.weather_offset = 0
+		self.nighttime_start = None
+		self.nighttime_end = None
 		
 		# Only initialize once
 		if SmartRoom.CalendarInfo == None:
@@ -70,19 +70,19 @@ class SmartRoom:
 	
 	# Set NIght Time Start
 	def set_nighttime_start(self, timestamp):
-		SmartRoom.Nighttime_Start = timestamp
+		self.nighttime_start = timestamp
 		
 	# Get NIght Time Start
 	def get_nighttime_start(self):
-		return SmartRoom.Nighttime_Start
+		return self.nighttime_start
 		
 	# Set Night time End
 	def set_nighttime_end(self, timestamp):
-		SmartRoom.Nighttime_End = timestamp
+		self.nighttime_end = timestamp
 		
 	# Get Night Time End
 	def get_nighttime_end(self):
-		return SmartRoom.Nighttime_End
+		return self.nighttime_end
 	
 	# Set offset in hours when it isn't sunny out
 	def set_weather_offset(self, weather_offset):

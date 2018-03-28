@@ -169,8 +169,15 @@ class SmartHome:
 			mm = room["nighttime_end_mm"]
 			nighttime_end = datetime.datetime(current.year,current.month, current.day,hh,mm)
 			
+			# Check if server bounced after midnight but before Night.  
+			# We will know this is current is before both start and end night time date
+			if current < nighttime_start and current < nighttime_end:
+				logging.info("Smarthome Load: current is before nighttime start and end")
+				nighttime_start = nighttime_start - datetime.timedelta(days=1)
+			
 			# If Start is after end then add a day to end
-			if nighttime_start > nighttime_end:
+			elif nighttime_start > nighttime_end:
+				logging.info("Smarthome Load: nighttime start is after end")
 				nighttime_end = nighttime_end + datetime.timedelta(days=1)
 			
 			devices = room["devices"]
