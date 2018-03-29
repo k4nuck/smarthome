@@ -341,7 +341,13 @@ class SmartRoom:
 	def nighttime_mode(self):
 		current = datetime.datetime.now()
 		
-		if (current > self.get_nighttime_start()) and (current < self.get_nighttime_end()):
+		# If Current is after start and end ... add a Day to both because it is the next day
+		if (current > self.get_nighttime_start()) and (current > self.get_nighttime_end()):
+			self.set_nighttime_start(self.get_nighttime_start()+ timedelta(days=1))
+			self.set_nighttime_end(self.get_nighttime_end()+timedelta(days=1))
+			
+		# We are in nighttime mode
+		elif (current > self.get_nighttime_start()) and (current < self.get_nighttime_end()):
 			return True
 		
 		return False
