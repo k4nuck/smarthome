@@ -60,6 +60,7 @@ class SmartRoom:
 		self.weather_offset = 0
 		self.nighttime_start = None
 		self.nighttime_end = None
+		self.current_mode = "default"
 		
 		# Only initialize once
 		if SmartRoom.CalendarInfo == None:
@@ -67,6 +68,14 @@ class SmartRoom:
 		if SmartRoom.WeatherInfo == None:
 			SmartRoom.WeatherInfo = self.update_weather_info()
 	
+	
+	# Set Mode for Room
+	def set_mode(self, mode):
+		self.current_mode = mode
+		
+	# Return Mode for a Room
+	def get_mode(self):
+		return self.current_mode
 	
 	# Set NIght Time Start
 	def set_nighttime_start(self, timestamp):

@@ -65,8 +65,8 @@ class SmartWeb(BaseHTTPRequestHandler):
         
         rooms = self.myHome.get_room_names()
         for room_name in rooms:
-			myHTMLlist.append("<h2>"+room_name+"</h2>")
 			aRoom = self.myHome.get_room(room_name)
+			myHTMLlist.append("<h2>"+room_name+" - Mode: "+aRoom.get_mode()+"</h2>")
 			
 			#Some Room Info
 			sun = aRoom.get_sun_data()
@@ -132,6 +132,9 @@ class SmartWeb(BaseHTTPRequestHandler):
 			self.wfile.write("<html><body><h1>Access Denied</h1></body></html>")
 			return
 			
+		#JB - MAke a Generic routine for this.
+		#     Also do not hard code mode names
+		#     Should work for do_POST as well
         #If Admin Check if System is enabled/disabled
         if adminMode:
 			if self.path.find("system=on") != -1:
@@ -143,6 +146,18 @@ class SmartWeb(BaseHTTPRequestHandler):
 				logging.info("SmartWeb:Disabling System")
 				SmartWeb.system_status = False
 				self.mainLoopQueue.put({'cmd':"onoff", 'data':"off"})
+				
+			if self.path.find("mode=dayoff")!=-1:
+				logging.info("SmartWeb:Setting Mode to dayoff")
+				self.mainLoopQueue.put({'cmd':"mode", 'data':"dayoff"})
+				# Update the "web" object so that it stays in sync with the main Smart Home Object
+				SmartWeb.myHome.set_mode("dayoff")
+				
+			if self.path.find("mode=default")!=-1:
+				logging.info("SmartWeb:Setting Mode to default")
+				self.mainLoopQueue.put({'cmd':"mode", 'data':"default"})
+				# Update the "web" object so that it stays in sync with the main Smart Home Object
+				SmartWeb.myHome.set_mode("default")
         
         # Show Status of Sensors and Switches
         myHTML = self.get_status_html(guestMode, adminMode)
@@ -160,7 +175,26 @@ class SmartWeb(BaseHTTPRequestHandler):
         content_len = int(self.headers.getheader('content-length', 0))
         post_body = self.rfile.read(content_len)
         
-        # Send Update back to Main
-        self.mainLoopQueue.put({'cmd':"Web", 'data':post_body})
+        if post_body.find("system=on") != -1:
+			logging.info("SmartWeb:Enabling System from ALEXA")
+			SmartWeb.system_status = True
+			self.mainLoopQueue.put({'cmd':"onoff", 'data':"on"})		
+        elif post_body.find("system=off") != -1:
+			logging.info("SmartWeb:Disabling System from ALEXA")
+			SmartWeb.system_status = False
+			self.mainLoopQueue.put({'cmd':"onoff", 'data':"off"})
+        elif post_body.find("mode=dayoff")!= -1:
+			logging.info("SmartWeb:Setting Mode to dayoff from ALEXA")
+			self.mainLoopQueue.put({'cmd':"mode", 'data':"dayoff"})
+			# Update the "web" object so that it stays in sync with the main Smart Home Object
+			SmartWeb.myHome.set_mode("dayoff")
+        elif post_body.find("mode=default")!= -1:
+			logging.info("SmartWeb:Setting Mode to default  from ALEXA")
+			self.mainLoopQueue.put({'cmd':"mode", 'data':"default"})
+			# Update the "web" object so that it stays in sync with the main Smart Home Object
+			SmartWeb.myHome.set_mode("default")
+        else:
+			# Send Update back to Main
+			self.mainLoopQueue.put({'cmd':"Web", 'data':post_body})
         
         self.wfile.write("<html><body><h1>POST!</h1></body></html>")

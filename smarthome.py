@@ -69,6 +69,7 @@ class SmartHome:
 		self.room_names = []
 		self.last_refresh = 0
 		self.on = True
+		self.modes = {}
 		
 		# Default Refresh Rates if not in Config
 		self.refresh_time=300
@@ -132,6 +133,68 @@ class SmartHome:
 	# Return name of a room
 	def get_name(self):
 		return self.name
+		
+	# Set Room Based on Mode
+	def set_mode_for_room(self, mode, room_name):
+		logging.info("Set Mode for Room: "+ mode+ " - Room: "+room_name)
+		
+		# Get Room
+		aRoom = self.get_room(room_name)
+		aRoom.set_mode(mode)
+		
+		# Get Mode Settings
+		mode = self.modes[room_name][mode]
+		allow_force_off = mode["allow_force_off"] 
+		sunset_offset = mode["sunset_offset"] 
+		sunrise_offset = mode["sunrise_offset"] 
+		weather_offset = mode["weather_offset"]
+			
+		# Get start hh and mm and create a datetime object
+		current = datetime.datetime.now()
+		hh = mode["nighttime_start_hh"]
+		mm = mode["nighttime_start_mm"]
+		nighttime_start = datetime.datetime(current.year,current.month, current.day,hh,mm)
+			
+		# Get end hh and mm and create datetime object
+		hh = mode["nighttime_end_hh"]
+		mm = mode["nighttime_end_mm"]
+		nighttime_end = datetime.datetime(current.year,current.month, current.day,hh,mm)
+			
+		# Check if server bounced after midnight but before Night.  
+		# We will know this is current is before both start and end night time date
+		if current < nighttime_start and current < nighttime_end:
+			logging.info("Set Mode For Room: current is before nighttime start and end")
+			nighttime_start = nighttime_start - datetime.timedelta(days=1)
+			
+		# If Start is after end then add a day to end
+		elif nighttime_start > nighttime_end:
+			logging.info("Set Mode For Room: nighttime start is after end")
+			nighttime_end = nighttime_end + datetime.timedelta(days=1)
+			
+		#Set Properties of the room
+		aRoom.set_allow_force_off(allow_force_off)
+		aRoom.set_sunset_offset(sunset_offset)
+		aRoom.set_sunrise_offset(sunrise_offset)
+		aRoom.set_weather_offset(weather_offset)
+		aRoom.set_nighttime_start(nighttime_start)
+		aRoom.set_nighttime_end(nighttime_end)
+			
+		logging.debug("Set Mode For Room:Name:"+room_name)
+		logging.debug("Set Mode For Room:force Off:"+ str(allow_force_off))
+		logging.debug("Set Mode For Room:sunset offset:"+ str(sunset_offset))
+		logging.debug("Set Mode For Room:sunrise offset:"+ str(sunrise_offset))
+		logging.debug("Set Mode For Room:weather offset:"+ str(weather_offset))
+		logging.debug("Set Mode For Room: Nighttime Start:"+ str(nighttime_start))
+		logging.debug("Set Mode For Room: Nighttime End:"+ str(nighttime_end))
+		
+	# Set Home based on Mode
+	def set_mode(self, mode):
+		logging.info("Set Mode: "+ mode)
+		
+		# Loop through each room and update the mode for each room
+		room_names = self.get_room_names()
+		for room_name in room_names:
+			self.set_mode_for_room(mode,room_name)
 	
 	# Use this to create Home from JSON
 	def setup_home_from_json(self, json_data): 
@@ -153,58 +216,23 @@ class SmartHome:
 		
 		for room in rooms:
 			room_name = room["name"]
-			allow_force_off = room["allow_force_off"] 
-			sunset_offset = room["sunset_offset"] 
-			sunrise_offset = room["sunrise_offset"] 
-			weather_offset = room["weather_offset"]
 			
-			# Get start hh and mm and create a datetime object
-			current = datetime.datetime.now()
-			hh = room["nighttime_start_hh"]
-			mm = room["nighttime_start_mm"]
-			nighttime_start = datetime.datetime(current.year,current.month, current.day,hh,mm)
+			# Save the modes for each room
+			self.modes[room_name] = {}
+			for mode in room["modes"]:
+				self.modes[room_name][mode["mode"]] = mode
 			
-			# Get end hh and mm and create datetime object
-			hh = room["nighttime_end_hh"]
-			mm = room["nighttime_end_mm"]
-			nighttime_end = datetime.datetime(current.year,current.month, current.day,hh,mm)
-			
-			# Check if server bounced after midnight but before Night.  
-			# We will know this is current is before both start and end night time date
-			if current < nighttime_start and current < nighttime_end:
-				logging.info("Smarthome Load: current is before nighttime start and end")
-				nighttime_start = nighttime_start - datetime.timedelta(days=1)
-			
-			# If Start is after end then add a day to end
-			elif nighttime_start > nighttime_end:
-				logging.info("Smarthome Load: nighttime start is after end")
-				nighttime_end = nighttime_end + datetime.timedelta(days=1)
-			
+			# Create Devices
 			devices = room["devices"]
 			for device in devices:
 				controller = device["controller"]
 				device_type = device["device_type"]
 				device_name = device["device_name"]
-				
 				self.add_device_details_to_room(room_name, controller, device_type, device_name)
-				
-			#Room Should be Created.  Get and Set Properties
-			aRoom = self.rooms[room_name]
-			aRoom.set_allow_force_off(allow_force_off)
-			aRoom.set_sunset_offset(sunset_offset)
-			aRoom.set_sunrise_offset(sunrise_offset)
-			aRoom.set_weather_offset(weather_offset)
-			aRoom.set_nighttime_start(nighttime_start)
-			aRoom.set_nighttime_end(nighttime_end)
 			
-			logging.debug("SmartHome:Name:"+room_name)
-			logging.debug("SmartHome Load Data:force Off:"+ str(allow_force_off))
-			logging.debug("SmartHome Load Data:sunset offset:"+ str(sunset_offset))
-			logging.debug("SmartHome Load Data:sunrise offset:"+ str(sunrise_offset))
-			logging.debug("SmartHome Load Data:weather offset:"+ str(weather_offset))
-			logging.debug("SmartHome Load Data: Nighttime Start:"+ str(nighttime_start))
-			logging.debug("SmartHome Load Data: Nighttime End:"+ str(nighttime_end))
-			
+		# Set Mode to Default
+		self.set_mode("default")
+		
 		# Refresh After new Devices added
 		self.refresh()
 				

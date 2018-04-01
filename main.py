@@ -81,6 +81,8 @@ def fifo_worker(mainLoopQueue):
 			#JB - Send update to web that system status changed.  Pipe()
 			if line=="off" or line=="on":
 				mainLoopQueue.put({'cmd':"onoff", 'data':line})
+				
+			#JB - Support Changing Mode and sending update to Web. Pipe()
 						
 		fifo.close()
 
@@ -150,6 +152,10 @@ def main():
 				onoff=False
 				
 			myHome.set_on_off(onoff)
+		
+		# Handle Mode Change
+		if obj["cmd"] == "mode":
+			myHome.set_mode(obj["data"])
 		
 		#Handle Status
 		if obj["cmd"]=="status":
