@@ -54,7 +54,7 @@
 		 "devices":[ 
 			{"controller":"SAMSUNG", "device_type":"switch", "device_name":"Kitchen Light"},
 			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Kitchen Sensor"}, 
-			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Dining Room Sensor"}
+			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Kitchen Sensor 2"}
 		]},
 		{"name":"Kitchen Table",
 		 "modes":[{
@@ -80,7 +80,7 @@
 		 ],
 		 "devices":[ 
 			{"controller":"SAMSUNG", "device_type":"switch", "device_name":"Kitchen Table Light"},
-			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Garage Door Sensor"},
+			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Kitchen Table Sensor 2"},
 			{"controller":"SAMSUNG", "device_type":"motion", "device_name":"Kitchen Table Sensor"}
 		]},
 		{"name":"Playroom",
