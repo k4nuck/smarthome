@@ -23,9 +23,16 @@
 #  
 # 
 
+import sys
 import couchdb
 import logging
+import datetime, time
 
+'''
+' Generic Interface to Couchdb to store Smarthome Data
+' Currently Supports Add/Update by Key (SmartHomeDB.update)
+' Currently Support Find By Key (SmartHomeDB.find_by_key)
+'''
 class SmartHomeDB:
 	DB=None
 	
@@ -34,27 +41,36 @@ class SmartHomeDB:
 		
 		if SmartHomeDB.DB == None:
 			couchserver = couchdb.Server("http://127.0.0.1:5984/")
-			dbname = "mydb"  #JB - Change the name to proper DB
+			dbname = "smarthomedb" 
 			if dbname in couchserver:
-				logging.info("Found DB in Server")
+				logging.info("Found DB in Server:"+dbname)
 				SmartHomeDB.DB = couchserver[dbname]
 			else:
-				logging.info("Creating DB in Server")
+				logging.info("Creating DB in Server:"+dbname)
 				SmartHomeDB.DB = couchserver.create(dbname)
 	
 	# Updates or Adds Record to the DB
 	def update(self, key, record):
 		try:
-			logging.info("SmartHomeDB Update:key:"+key+":record:"+str(record))
-			SmartHomeDB.DB[key] = record
+			logging.debug("SmartHomeDB Update:key:"+key+":record:"+str(record))
+			
+			# Check if Document already exists
+			#UPDATE
+			if key in SmartHomeDB.DB:
+				rec = SmartHomeDB.DB[key]
+				rec["MyHome"] = record
+				SmartHomeDB.DB.save(rec)
+			#ADD
+			else:
+				SmartHomeDB.DB[key] = {"MyHome":record}
 		except:
-			logging.error("SmartHomeDB Failed Update:Key:"+key+":record:"+str(record))
+			logging.error("SmartHomeDB Failed Update:Error:"+str(sys.exc_info()[0])+":Key:"+key+":record:"+str(record))
 			
 	# Find a Record by key
 	def find_by_key(self,key):
 		try:
-			logging.info("SmartHomeDB: Find by Record:"+key)
-			return SmartHomeDB.DB[key]
+			logging.debug("SmartHomeDB: Find by Record:"+key)
+			return SmartHomeDB.DB[key]["MyHome"]
 		except:
 			logging.error("SmartHomeDB Failed to find by key:"+key)
 			return None # JB - Probably want to return a default record.  Think about this
@@ -64,9 +80,64 @@ if __name__ == '__main__':
 	log_level = logging.INFO
 	logging.basicConfig(format='%(asctime)-15s %(levelname)-8s %(message)s', level=log_level)
 	
+	# Uncomment to Test Adding to DB
+	'''
+	status = True
+	refresh = 300
+	activity = 600
+	rooms = []
+	rooms.append({})
+	rooms.append({})
+	
+	#Some Room Info
+	name = "Living Room"
+			
+	# Get start hh and mm and create a datetime object
+	current = datetime.datetime.now()
+	hh = 9
+	mm = 35
+	t = datetime.datetime(current.year,current.month, current.day,hh,mm)
+	sunrise = time.mktime(t.timetuple())
+	#sunrise = "DATEINFO"
+	
+	rooms[0]["name"] = name
+	rooms[0][ "sunrise"] = sunrise
+	
+	#-------
+	
+	#Some Room Info
+	name = "Kitchen"
+			
+	# Get start hh and mm and create a datetime object
+	current = datetime.datetime.now()
+	hh = 10
+	mm = 35
+	t = datetime.datetime(current.year,current.month, current.day,hh,mm)
+	sunrise = time.mktime(t.timetuple())
+	#sunrise = "DATE INFO"
+	
+	rooms[1]["name"] = name
+	rooms[1][ "sunrise"] = sunrise
+	
+	record = {"status":status, "refresh":refresh, "activity":activity, "rooms":rooms}
+	
+	#---------
+	
 	myHomeDB = SmartHomeDB()
 	
-	myHomeDB.update("Joe",{"Test":"This is a test"})
+	myHomeDB.update("Joe3",record)
+	'''
 	
-	logging.info("Record from DB:"+str(myHomeDB.find_by_key("Joe")))
+	# Test Getting Current Record
+	myHomeDB = SmartHomeDB()
+	rec = myHomeDB.find_by_key("CurrentState")
+	logging.info("Record from DB:"+str(rec))
 	
+	# Test Converting Date Back
+	'''
+	date = datetime.datetime.fromtimestamp(rec["rooms"][0]["sunrise"])
+	logging.info("Sunrise:"+ str(date))
+	
+	date = datetime.datetime.fromtimestamp(rec["rooms"][1]["sunrise"])
+	logging.info("Sunrise:"+ str(date))
+	'''

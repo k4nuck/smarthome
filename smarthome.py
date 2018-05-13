@@ -30,6 +30,7 @@ import time
 
 from smartdevice import *
 from smartroom import *
+from smarthomedb import *
 
 '''
 Keep Track of Rooms in a House
@@ -70,6 +71,7 @@ class SmartHome:
 		self.last_refresh = 0
 		self.on = True
 		self.modes = {}
+		self.myHomeDB = SmartHomeDB()
 		
 		# Default Refresh Rates if not in Config
 		self.refresh_time=300
