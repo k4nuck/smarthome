@@ -198,6 +198,82 @@ class SmartHome:
 		for room_name in room_names:
 			self.set_mode_for_room(mode,room_name)
 	
+	# Return number of seconds from datetime
+	def get_seconds_from_datetime(self, t):
+		return time.mktime(t.timetuple())
+	
+	# Return datetime from seconds
+	def get_datetime_from_seconds(self, seconds):
+		return datetime.datetime.fromtimestamp(seconds)
+	
+	# Get DB Handle
+	def get_db_handle(self):
+		return self.myHomeDB
+	
+	# Update CurrentState in the DB
+	def update_current_state_in_db(self):
+		rec = {}
+		
+		# Populate Rec
+		rec["system_status"] = self.is_system_on()
+		rec["refresh_time"] = self.refresh_time
+		rec["activity_time"] = self.activity_time
+		rec["city"] = SmartRoom.City
+		rec["weather_loc_id"] = SmartRoom.Weather_Loc_id
+		rec["rooms"]=[]
+		
+		# Room Info
+		for room_name in self.room_names()
+			aroom = self.get_room(room_name)
+			
+			rec_room={"name":room_name}
+			
+			# Sun Info
+			sun = aroom.get_sun_data()
+			rec_room["sunrise"]= self.get_seconds_from_datetime(sun["sunrise"])
+			rec_room["sunset"]  = self.get_seconds_from_datetime(sun["sunset"])
+			rec_room["sunrise_offset"] = aRoom.get_sunrise_offset()
+			rec_room["sunset_offset"] = aRoom.get_sunset_offset()
+			
+			# Weather Info
+			weather = aRoom.get_weather_data()
+			rec_room["weather_offset"] = aRoom.get_weather_offset()
+			rec_room["forecast"] = weather["forecast"]
+			rec_room["location"] = weather["location"]
+			rec_room["day_of_week"] = weather["day_of_week"]
+			
+			# Other
+			rec_room["lights_stay_off"] = aRoom.should_lights_stay_off()
+			rec_room["nighttime_mode"] = aRoom.nighttime_mode()
+			rec_room["nighttime_start"] = self.get_seconds_from_datetime((aRoom.get_nighttime_start())
+			rec_room["nighttime_end"] = self.get_seconds_from_datetime((aRoom.get_nighttime_end())
+			
+			rec_room["switches"] = []
+			
+			# Get Switch Device Information
+			devices = aRoom.get_switch_devices()
+			for device_name in devices:
+				rec_device = {"name":device_name}
+				aDevice = aRoom.get_device(device_name)
+				rec_device["state"] = aDevice.query_state()
+				rec_room["switches"].append(rec_device)
+								
+			rec_room["motions"] = []
+			
+			# Get Motion Device Information
+			devices = aRoom.get_motion_devices()
+			for device_name in devices:
+				rec_device = {"name":device_name}
+				aDevice = aRoom.get_device(device_name)
+				rec_device["state"] = aDevice.query_state()
+				rec_room["motions"].append(rec_device)
+				
+			# Add Room Data
+			rec["rooms"].append(rec_room)
+			
+		# Commit
+		self.get_db_handle().update("CurrentState",rec)
+			
 	# Use this to create Home from JSON
 	def setup_home_from_json(self, json_data): 
 		logging.info("Creating Home from JSON")
@@ -304,3 +380,6 @@ class SmartHome:
 					room.turn_switches_on_in_room()
 		
 			logging.debug("----------End-------------")
+			
+		# Update DB
+		self.update_current_state_in_db()
