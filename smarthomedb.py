@@ -132,6 +132,8 @@ if __name__ == '__main__':
 	myHomeDB = SmartHomeDB()
 	rec = myHomeDB.find_by_key("CurrentState")
 	logging.info("Record from DB:"+str(rec))
+	date = datetime.datetime.fromtimestamp(rec["timestamp"])
+	logging.info("Timestamp:"+str(date))
 	
 	# Test Converting Date Back
 	'''

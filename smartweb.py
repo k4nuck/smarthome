@@ -31,6 +31,7 @@ import urlparse
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from smarthome import *
+from smarthomedb import *
 
 class SmartWeb(BaseHTTPRequestHandler):
     mainLoopQueue=None

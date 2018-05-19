@@ -30,7 +30,7 @@ import time
 
 from smartdevice import *
 from smartroom import *
-from smarthomedb import *
+from smarthomeutils import *
 
 '''
 Keep Track of Rooms in a House
@@ -71,7 +71,7 @@ class SmartHome:
 		self.last_refresh = 0
 		self.on = True
 		self.modes = {}
-		self.myHomeDB = SmartHomeDB()
+		self.home_utils = SmartHomeUtils()
 		
 		# Default Refresh Rates if not in Config
 		self.refresh_time=300
@@ -198,40 +198,29 @@ class SmartHome:
 		for room_name in room_names:
 			self.set_mode_for_room(mode,room_name)
 	
-	# Return number of seconds from datetime
-	def get_seconds_from_datetime(self, t):
-		return time.mktime(t.timetuple())
-	
-	# Return datetime from seconds
-	def get_datetime_from_seconds(self, seconds):
-		return datetime.datetime.fromtimestamp(seconds)
-	
-	# Get DB Handle
-	def get_db_handle(self):
-		return self.myHomeDB
-	
 	# Update CurrentState in the DB
 	def update_current_state_in_db(self):
 		rec = {}
 		
 		# Populate Rec
+		rec["timestamp"] = time.time()
 		rec["system_status"] = self.is_system_on()
 		rec["refresh_time"] = self.refresh_time
 		rec["activity_time"] = self.activity_time
 		rec["city"] = SmartRoom.City
-		rec["weather_loc_id"] = SmartRoom.Weather_Loc_id
+		rec["weather_loc_id"] = SmartRoom.Weather_Loc_Id
 		rec["rooms"]=[]
 		
 		# Room Info
-		for room_name in self.room_names()
-			aroom = self.get_room(room_name)
+		for room_name in self.get_room_names():
+			aRoom = self.get_room(room_name)
 			
 			rec_room={"name":room_name}
 			
 			# Sun Info
-			sun = aroom.get_sun_data()
-			rec_room["sunrise"]= self.get_seconds_from_datetime(sun["sunrise"])
-			rec_room["sunset"]  = self.get_seconds_from_datetime(sun["sunset"])
+			sun = aRoom.get_sun_data()
+			rec_room["sunrise"]= self.home_utils.get_seconds_from_datetime(sun["sunrise"])
+			rec_room["sunset"]  = self.home_utils.get_seconds_from_datetime(sun["sunset"])
 			rec_room["sunrise_offset"] = aRoom.get_sunrise_offset()
 			rec_room["sunset_offset"] = aRoom.get_sunset_offset()
 			
@@ -245,8 +234,8 @@ class SmartHome:
 			# Other
 			rec_room["lights_stay_off"] = aRoom.should_lights_stay_off()
 			rec_room["nighttime_mode"] = aRoom.nighttime_mode()
-			rec_room["nighttime_start"] = self.get_seconds_from_datetime((aRoom.get_nighttime_start())
-			rec_room["nighttime_end"] = self.get_seconds_from_datetime((aRoom.get_nighttime_end())
+			rec_room["nighttime_start"] = self.home_utils.get_seconds_from_datetime(aRoom.get_nighttime_start())
+			rec_room["nighttime_end"] = self.home_utils.get_seconds_from_datetime(aRoom.get_nighttime_end())
 			
 			rec_room["switches"] = []
 			
@@ -272,7 +261,7 @@ class SmartHome:
 			rec["rooms"].append(rec_room)
 			
 		# Commit
-		self.get_db_handle().update("CurrentState",rec)
+		self.home_utils.commit_current_state_in_db(rec)
 			
 	# Use this to create Home from JSON
 	def setup_home_from_json(self, json_data): 
