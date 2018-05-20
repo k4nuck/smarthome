@@ -232,6 +232,8 @@ class SmartHome:
 			rec_room["day_of_week"] = weather["day_of_week"]
 			
 			# Other
+			rec_room["allow_force_off"] = aRoom.get_allow_force_off()
+			rec_room["mode"] = aRoom.get_mode()
 			rec_room["lights_stay_off"] = aRoom.should_lights_stay_off()
 			rec_room["nighttime_mode"] = aRoom.nighttime_mode()
 			rec_room["nighttime_start"] = self.home_utils.get_seconds_from_datetime(aRoom.get_nighttime_start())

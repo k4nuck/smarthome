@@ -31,7 +31,7 @@ import urlparse
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from smarthome import *
-from smarthomedb import *
+from smarthomeutils import *
 
 class SmartWeb(BaseHTTPRequestHandler):
     mainLoopQueue=None
@@ -47,6 +47,87 @@ class SmartWeb(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
+        
+    def get_status_html_from_db(self, guestMode, adminMode):
+        logging.info("SmartWebDB:Getting Status:Guest:"+str(guestMode)+":admin:"+str(adminMode))
+		
+        # Get Current State from DB
+        home_util = SmartHomeUtils()
+        rec = home_util.get_current_state_from_db()
+        logging.debug("SmartWebDB:rec:"+str(rec))
+        
+        date = datetime.datetime.fromtimestamp(rec["timestamp"])
+        
+        myHTMLlist=[]
+        
+        myHTMLlist.append("<html>")
+        myHTMLlist.append("<body>")
+        myHTMLlist.append("<h1>K4nuCK Home Dashboard</h1>")
+        myHTMLlist.append("<p style=\"text-indent :2em;\">Last Update: "+str(date)+"</p>")
+        myHTMLlist.append("<p style=\"text-indent :2em;\">System Status:"+str(self.system_status)+" - Admin:"+str(adminMode)+"</p>")
+        
+        refresh = home_util.get_datetime_from_seconds(rec["refresh_time"])
+        activity = home_util.get_datetime_from_seconds(rec["activity_time"])
+        
+        myHTMLlist.append("<p style=\"text-indent :2em;\">Refresh Reset Time:"+str(refresh)+" - Activity Reset Time:"+str(activity)+"</p>")
+        
+        rooms = rec["rooms"]
+        for rec_room in rooms:
+			room_name = rec_room["name"]
+			mode = rec_room["mode"]
+			
+			myHTMLlist.append("<h2>"+room_name+" - Mode: "+mode+"</h2>")
+			
+			# Room Info
+			allow_force_off = rec_room["allow_force_off"]
+			lights_stay_off = rec_room["lights_stay_off"]
+			nighttime_mode = rec_room["nighttime_mode"] 
+			nighttime_start = home_util.get_datetime_from_seconds(rec_room["nighttime_start"])
+			nighttime_end = home_util.get_datetime_from_seconds(rec_room["nighttime_end"])
+			
+			# Sun Info
+			sunrise = home_util.get_datetime_from_seconds(rec_room["sunrise"])
+			sunset = home_util.get_datetime_from_seconds(rec_room["sunset"])
+			sunrise_offset = rec_room["sunrise_offset"]
+			sunset_offset = rec_room["sunset_offset"]
+			
+			# Weather Info
+			weather_offset = rec_room["weather_offset"]
+			forecast = rec_room["forecast"]
+			location = rec_room["location"]
+			day_of_week = rec_room["day_of_week"]
+			
+			myHTMLlist.append("<p style=\"text-indent :2em;\">Sunrise: "+str(sunrise)+" - Sunset: "+str(sunset)+" - Force Lights Off: "+str(lights_stay_off)+"</p>")
+			
+			if allow_force_off:
+				myHTMLlist.append("<p style=\"text-indent :2em;\">Sunrise Offset: "+str(sunrise_offset) + " hours - Sunset Offset:"+str(sunset_offset)+" hours</p>")
+				myHTMLlist.append("<p style=\"text-indent :2em;\">Location: "+location+" - Day of Week: " +day_of_week+ " - Forecast: "+forecast+" - Weather Offset: "+str(weather_offset)+" hours</p>")
+			else:
+				myHTMLlist.append("<p style=\"text-indent :2em;\">DO NOT ALLOW FORCE OFF</p>")
+				
+		    
+			myHTMLlist.append("<p style=\"text-indent :2em;\">Night Time Mode: "+str(nighttime_mode)+" - Night Time Start: "+str(nighttime_start)+" - Night Time End: "+str(nighttime_end)+"</p>")
+			
+			# Switches
+			myHTMLlist.append("<h3>Switches</h3>")
+			switches = rec_room["switches"]
+			for rec_device in switches:
+				device_name = rec_device["name"]
+				state = rec_device["state"]
+				myHTMLlist.append("<p style=\"text-indent :2em;\">"+device_name+": "+str(state)+"</p>")
+				
+		    # Motion Sensors
+			myHTMLlist.append("<h3>Motion Sensors</h3>")
+			motions = rec_room["motions"]
+			for rec_device in motions:
+				device_name = rec_device["name"]
+				state = rec_device["state"]
+				myHTMLlist.append("<p style=\"text-indent :2em;\">"+device_name+": "+str(state)+"</p>")
+		    
+        myHTMLlist.append("</body>")
+        myHTMLlist.append("</html>")
+        
+        return ''.join(myHTMLlist)
         
     # Return HTML that shows the status of the system
     def get_status_html(self, guestMode, adminMode):
@@ -133,6 +214,12 @@ class SmartWeb(BaseHTTPRequestHandler):
 			self.wfile.write("<html><body><h1>Access Denied</h1></body></html>")
 			return
 			
+        # Check if we want to get web page from DB
+        if self.path.find("notfromdb") != -1:
+			fromdb = False
+        else:
+			fromdb = True
+			
 		#JB - MAke a Generic routine for this.
 		#     Also do not hard code mode names
 		#     Should work for do_POST as well
@@ -161,7 +248,11 @@ class SmartWeb(BaseHTTPRequestHandler):
 				SmartWeb.myHome.set_mode("default")
         
         # Show Status of Sensors and Switches
-        myHTML = self.get_status_html(guestMode, adminMode)
+        if fromdb:
+			myHTML = self.get_status_html_from_db(guestMode, adminMode)
+        else:
+			myHTML = self.get_status_html(guestMode, adminMode)
+        
         self.wfile.write(myHTML)
         
 
