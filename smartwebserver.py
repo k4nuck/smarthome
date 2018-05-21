@@ -68,6 +68,14 @@ class SmartWeb(BaseHTTPRequestHandler):
 			self.wfile.write("<html><body><h1>Access Denied</h1></body></html>")
 			return
 			
+        # Status Return
+        myHTMLlist=[]
+        
+        myHTMLlist.append("<html>")
+        myHTMLlist.append("<body>")
+        myHTMLlist.append("<h1>Access Granted</h1>")
+        myHTMLlist.append("<h2>Admin: "+str(adminMode)+"</h2>")
+        		
         #JB - MAke a Generic routine for this.
 		#     Also do not hard code mode names
 		#     Should work for do_POST as well
@@ -76,22 +84,27 @@ class SmartWeb(BaseHTTPRequestHandler):
 			if self.path.find("system=on") != -1:
 				logging.info("SmartWeb:Enabling System")
 				self.mainLoopQueue.put({'cmd':"onoff", 'data':"on"})
+				myHTMLlist.append("<h2>Enabling the System</h2>")
 				
 			if self.path.find("system=off") != -1:
 				logging.info("SmartWeb:Disabling System")
 				self.mainLoopQueue.put({'cmd':"onoff", 'data':"off"})
+				myHTMLlist.append("<h2>Disabling the System</h2>")
 				
 			if self.path.find("mode=dayoff")!=-1:
 				logging.info("SmartWeb:Setting Mode to dayoff")
 				self.mainLoopQueue.put({'cmd':"mode", 'data':"dayoff"})
+				myHTMLlist.append("<h2>Setting mode to dayoff</h2>")
 				
 			if self.path.find("mode=default")!=-1:
 				logging.info("SmartWeb:Setting Mode to default")
 				self.mainLoopQueue.put({'cmd':"mode", 'data':"default"})
-		
-        # JB - Show some status 		
-        myHTML = "<html><body><h1>Access Granted</h1></body></html>"
+				myHTMLlist.append("<h2>Setting mode to default</h2>")
         
+        myHTMLlist.append("</body>")
+        myHTMLlist.append("</html>")
+        
+        myHTML = ''.join(myHTMLlist)
         self.wfile.write(myHTML)
         
 
