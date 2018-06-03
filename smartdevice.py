@@ -59,7 +59,8 @@ class SmartDevice:
 		self.device_type = device_type
 		self.device_name = device_name
 		self.device_state =None
-		self.timestamp = 0
+		self.timestamp = time.time()
+		self.overriden  = False
 		
 		# Initialize last active based on active
 		self.query()
@@ -87,9 +88,23 @@ class SmartDevice:
 	def query_state(self):
 		req = self.query()
 		return req["state"]
+		
+	# Set Overriden
+	def set_overriden(self, value):
+		self.overriden = value
+	
+	# Get Overriden 
+	def get_overriden(self):
+		return self.overriden
 			
 	# Enable/Disable a device
-	def set(self, cmd):
+	def set(self, cmd):	
+		# JB - When do we reset self.overriden?
+		
+		if self.get_overriden():
+			logging.info("SmartDevice:Overriden is set to True.  NOOP")
+			return None
+		
 		if cmd =="on":
 			if self.device_state:
 				logging.debug("Device Set No OP:"+cmd)

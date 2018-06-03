@@ -131,6 +131,8 @@ class SmartWeb(BaseHTTPRequestHandler):
         elif post_body.find("mode=default")!= -1:
 			logging.info("SmartWeb:Setting Mode to default  from ALEXA")
 			self.mainLoopQueue.put({'cmd':"mode", 'data':"default"})
+        #elif post_body.find("switch_triggered")!=-1:
+		#	logging.info("SmartWeb:Switch Tripped: "+ post_body)
         else:
 			# Send Update back to Main
 			self.mainLoopQueue.put({'cmd':"Web", 'data':post_body})

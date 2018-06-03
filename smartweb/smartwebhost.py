@@ -113,7 +113,8 @@ class SmartWebHost(BaseHTTPRequestHandler):
 			for rec_device in switches:
 				device_name = rec_device["name"]
 				state = rec_device["state"]
-				myHTMLlist.append("<p style=\"text-indent :2em;\">"+device_name+": "+str(state)+"</p>")
+				overriden = rec_device["overriden"]
+				myHTMLlist.append("<p style=\"text-indent :2em;\">"+device_name+": "+str(state)+" - Overriden: "+str(overriden)+"</p>")
 				
 		    # Motion Sensors
 			myHTMLlist.append("<h3>Motion Sensors</h3>")

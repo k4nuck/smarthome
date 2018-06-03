@@ -110,7 +110,7 @@ class SmartHome:
 		
 		#Update Device Cache
 		name = device.get_device_name()
-		self.devices[name] = device
+		self.devices[name] = {"device":device,"room":myRoom}
 		
 		
 	# Create a Device and Add it to a room
@@ -120,7 +120,7 @@ class SmartHome:
 		if device_name not in self.devices:
 			aDevice = SmartDevice(controller, device_type, device_name)
 		else:
-			aDevice = self.devices[device_name]
+			aDevice = self.devices[device_name]["device"]
 		
 		self.add_device_to_room(room_name, aDevice)
 		
@@ -247,6 +247,7 @@ class SmartHome:
 				rec_device = {"name":device_name}
 				aDevice = aRoom.get_device(device_name)
 				rec_device["state"] = aDevice.query_state()
+				rec_device["overriden"] = aDevice.get_overriden()
 				rec_room["switches"].append(rec_device)
 								
 			rec_room["motions"] = []
@@ -306,12 +307,49 @@ class SmartHome:
 		self.refresh()
 				
 	# Handle Motion Sensor Triggered
-	def handle_device_triggered(self, device_name):
-		logging.info("SmartHome Device Triggered:" + device_name)
+	def handle_device_triggered(self, data):
+		logging.info("SmartHome Device Triggered:" + data)
 		
-		# Find Device and update
-		device = self.devices[device_name]
+		if data.find("switch_triggered_off")!=-1:
+			#JB - SET Switch On?
+			is_motion_device = False
+			device_name = data.split(":",1)[1]
+			logging.info("SmartHome Device Switch Off: "+ device_name)
+		elif data.find("switch_triggered_on")!=-1:
+			#JB - SET Switch Off?
+			is_motion_device = False
+			device_name = data.split(":",1)[1]
+			logging.info("SmartHome Device Switch On: "+ device_name)
+		else:
+			is_motion_device = True
+			device_name = data
+			
+		# Find Device
+		device = self.devices[device_name]["device"]
+			
+		# Motion Sensors come first and update timestamp
+		# If the Diff between the motion sensor activating and 
+		# Switch being flipped is more than 3 seconds then 
+		# Consider SWitch overriden
+		if is_motion_device == False:
+			current_time = time.time()
+			if (current_time - device.get_last_active())>5:
+				logging.info("Handle_device_triggered: "+device_name+"Manual Override Set:Time Diff:"+str(current_time - device.get_last_active()))
+				device.set_overriden(True)
+				
+		# JB - What condition to set overriden to False?
+		
+		
+		#Update Device
 		device.set_last_active()
+		
+		# If Motion Sensor Tripped then Find all Switches in the room and update last active
+		if is_motion_device==True:
+			# Get Room
+			room = self.devices[device_name]["room"]
+			switch_devices = room.get_switch_devices()
+			for switch in switch_devices:
+				self.devices[switch]["device"].set_last_active()
 		
 		# Refresh
 		self.refresh()
