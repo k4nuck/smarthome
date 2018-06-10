@@ -248,6 +248,7 @@ class SmartHome:
 				aDevice = aRoom.get_device(device_name)
 				rec_device["state"] = aDevice.query_state()
 				rec_device["overriden"] = aDevice.get_overriden()
+				rec_device["last_active"] = aDevice.get_last_active()
 				rec_room["switches"].append(rec_device)
 								
 			rec_room["motions"] = []
@@ -333,12 +334,10 @@ class SmartHome:
 		# Consider SWitch overriden
 		if is_motion_device == False:
 			current_time = time.time()
-			if (current_time - device.get_last_active())>5:
-				logging.info("Handle_device_triggered: "+device_name+"Manual Override Set:Time Diff:"+str(current_time - device.get_last_active()))
+			if (current_time - device.get_last_active())>10:
+				logging.info("Handle_device_triggered: "+device_name+" - Manual Override Set:Time Diff:"+str(current_time - device.get_last_active()))
 				device.set_overriden(True)
-				
-		# JB - What condition to set overriden to False?
-		
+				device.set_last_active()
 		
 		#Update Device
 		device.set_last_active()
@@ -379,13 +378,8 @@ class SmartHome:
 			for room_name in self.room_names:
 				room = self.rooms[room_name]
 				
-				#If Expired then switches are already off.  Nothing to do
-				# Unless the Room is forced off ... then we should do a refresh
-				# JB - DON'T IMPLEMENT this until we start capturing MANUAL overrides
-				if (current_time - room.get_last_active()) > self.get_activity_time():
-					logging.debug("My Home Refresh: No Need to Refresh:"+ room_name)
-				else:
-					#Full Refresh .. In case Motion Sensors are constantly active.
+				#Full Refresh .. In case Motion Sensors are constantly active.
+				if (current_time - room.get_last_active()) <= self.get_activity_time():
 					room.refresh_last_active()
 		
 		# Check last activity in a room

@@ -114,7 +114,9 @@ class SmartWebHost(BaseHTTPRequestHandler):
 				device_name = rec_device["name"]
 				state = rec_device["state"]
 				overriden = rec_device["overriden"]
-				myHTMLlist.append("<p style=\"text-indent :2em;\">"+device_name+": "+str(state)+" - Overriden: "+str(overriden)+"</p>")
+				current_time = time.time()
+				last_active = rec_device["last_active"]
+				myHTMLlist.append("<p style=\"text-indent :2em;\">"+device_name+": "+str(state)+" - Overriden: "+str(overriden)+" - Last Active: "+str(current_time-last_active)+"</p>")
 				
 		    # Motion Sensors
 			myHTMLlist.append("<h3>Motion Sensors</h3>")
