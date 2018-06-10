@@ -375,10 +375,4 @@ class SmartRoom:
 	def turn_switches_off_in_room(self):	
 		for device_name in self.get_switch_devices():
 			device = self.get_device(device_name)
-			# If overriden do nothing
-			if device.get_overriden():
-				return
-				
-			# System turning off lights ... update timestamp so that we dont mistake this as an override
-			device.set_last_active()
 			device.set_off()

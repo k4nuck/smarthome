@@ -259,6 +259,7 @@ class SmartHome:
 				rec_device = {"name":device_name}
 				aDevice = aRoom.get_device(device_name)
 				rec_device["state"] = aDevice.query_state()
+				rec_device["last_active"] = aDevice.get_last_active()
 				rec_room["motions"].append(rec_device)
 				
 			# Add Room Data
@@ -330,25 +331,26 @@ class SmartHome:
 			
 		# Motion Sensors come first and update timestamp
 		# If the Diff between the motion sensor activating and 
-		# Switch being flipped is more than 3 seconds then 
+		# Switch being flipped is more than 10 seconds then 
 		# Consider SWitch overriden
 		if is_motion_device == False:
 			current_time = time.time()
 			if (current_time - device.get_last_active())>10:
 				logging.info("Handle_device_triggered: "+device_name+" - Manual Override Set:Time Diff:"+str(current_time - device.get_last_active()))
 				device.set_overriden(True)
+				
+				# Update Device
 				device.set_last_active()
+				
+				# Update DB
+				self.update_current_state_in_db()
+				
+				return
 		
-		#Update Device
-		device.set_last_active()
-		
-		# If Motion Sensor Tripped then Find all Switches in the room and update last active
+		# If Motion Sensor Tripped then set ;ast active for the switch
 		if is_motion_device==True:
-			# Get Room
-			room = self.devices[device_name]["room"]
-			switch_devices = room.get_switch_devices()
-			for switch in switch_devices:
-				self.devices[switch]["device"].set_last_active()
+			#Update Device
+			device.set_last_active()
 		
 		# Refresh
 		self.refresh()
@@ -387,6 +389,21 @@ class SmartHome:
 		if self.is_system_on():
 			for room_name in self.room_names:
 				room = self.rooms[room_name]
+				
+				# Check if any overridden Switches need to be reset
+				switch_devices = room.get_switch_devices()
+				for switch in switch_devices:
+					if self.devices[switch]["device"].get_overriden():
+						logging.debug("SmartHome:Device Is Overriden: "+switch)
+						last_active = self.devices[switch]["device"].get_last_active()
+					
+						logging.debug("SmartHome:Device time diff: "+str(current_time - last_active))
+					
+						# After 30 minutes of no activity reset overriden
+						if current_time - last_active > 1800:
+							self.devices[switch]["device"].set_overriden(False)
+							self.devices[switch]["device"].set_last_active()
+							logging.info("SmartDevice:Resetting Overriden to False: "+ switch)
 				
 				logging.debug("SmartHome:Room Name:"+room_name)
 				logging.debug("SmartHome:Last Active:"+str(room.get_last_active()))

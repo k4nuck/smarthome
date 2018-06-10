@@ -100,15 +100,8 @@ class SmartDevice:
 	# Enable/Disable a device
 	def set(self, cmd):	
 		if self.get_overriden():
-			current_time = time.time()
-			# After 30 minutes of no activity reset overriden
-			if current_time - self.get_last_active() > 1800:
-				self.set_overriden(False)
-				self.set_last_active()
-				logging.info("SmartDevice:Resetting Overriden to False")
-			else:
-				logging.info("SmartDevice:Overriden is set to True.  NOOP")
-				return None
+			logging.debug("SmartDevice:Overriden is set to True.  NOOP")
+			return None
 		
 		if cmd =="on":
 			if self.device_state:
@@ -126,6 +119,10 @@ class SmartDevice:
 				self.device_state = False
 				
 		logging.info("SmartDevice:"+self.device_name+":Set Cmd:"+cmd)
+		
+		# Update last activity here
+		self.set_last_active()
+		
 		SmartDevice.smartcontroller.set(self.controller, self.device_type, self.device_name,cmd)
 		return None
 		

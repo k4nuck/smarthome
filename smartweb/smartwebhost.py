@@ -107,6 +107,9 @@ class SmartWebHost(BaseHTTPRequestHandler):
 		    
 			myHTMLlist.append("<p style=\"text-indent :2em;\">Night Time Mode: "+str(nighttime_mode)+" - Night Time Start: "+str(nighttime_start)+" - Night Time End: "+str(nighttime_end)+"</p>")
 			
+			# Current Time for Motion and Switch Diffs
+			current_time = time.time()
+			
 			# Switches
 			myHTMLlist.append("<h3>Switches</h3>")
 			switches = rec_room["switches"]
@@ -114,7 +117,6 @@ class SmartWebHost(BaseHTTPRequestHandler):
 				device_name = rec_device["name"]
 				state = rec_device["state"]
 				overriden = rec_device["overriden"]
-				current_time = time.time()
 				last_active = rec_device["last_active"]
 				myHTMLlist.append("<p style=\"text-indent :2em;\">"+device_name+": "+str(state)+" - Overriden: "+str(overriden)+" - Last Active: "+str(current_time-last_active)+"</p>")
 				
@@ -124,7 +126,8 @@ class SmartWebHost(BaseHTTPRequestHandler):
 			for rec_device in motions:
 				device_name = rec_device["name"]
 				state = rec_device["state"]
-				myHTMLlist.append("<p style=\"text-indent :2em;\">"+device_name+": "+str(state)+"</p>")
+				last_active = rec_device["last_active"]
+				myHTMLlist.append("<p style=\"text-indent :2em;\">"+device_name+": "+str(state)+" - Last Active: "+str(current_time-last_active)+"</p>")
 		    
         myHTMLlist.append("</body>")
         myHTMLlist.append("</html>")
