@@ -101,6 +101,10 @@ class SmartDevice:
 	def set(self, cmd):	
 		if self.get_overriden():
 			logging.debug("SmartDevice:Overriden is set to True.  NOOP")
+			# If overriden to turn the light on.  Reset timer for any reason if requested to leave the light on
+			if self.device_state and cmd =="on":
+				logging.info("SmartDevice:Overriden ... Keep LIGHTS ON!!")
+				self.set_last_active()
 			return None
 		
 		if cmd =="on":
