@@ -23,15 +23,52 @@
 #  
 # 
 
+import multiprocessing 
+import time
 import os
 import sys
 import logging
 from logging.handlers import RotatingFileHandler
+from subprocess import call
 
 sys.path.append("/home/pi/projects/smarthome/") 
 
-from smartdevice import *
+from smartpump import *
 
+# Process for sending commands to the server from command line
+def fifo_worker(mainLoopQueue):
+	
+	logging.info("FIFO Worker Spawned")
+	
+	# Create FIFO File if needed
+	path = "/home/pi/projects/smarthome/smartpump/pump.fifo"
+	if not os.path.exists(path):
+		os.mkfifo(path)
+	
+	#Wait for Commands
+	while True:
+		fifo = open(path, "r")
+		for line in fifo:
+			logging.info( "FIFO;Received: (" + line + ")")
+			
+			if line=="exit":
+				mainLoopQueue.put({'cmd':line, 'data':None})
+				
+			if line=="status":
+				mainLoopQueue.put({'cmd':line, 'data':None})
+					
+		fifo.close()
+
+# Process for notifying server of delta time has passed
+def timer_worker(mainLoopQueue):
+	logging.info("TIMER Worker Spawned")
+	
+	#Sleep and then notify parent
+	while True:
+		time.sleep(60)
+		mainLoopQueue.put({'cmd':"Time", 'data':None})
+		
+# Main
 def main():
 	# Setup Logging
 	log_level = logging.INFO
@@ -44,11 +81,16 @@ def main():
 	
 	logging.info( "Smart Pump Started")
 	
-	# Get Recirc Pump Status
-	pump = SmartDevice("SAMSUNG", "switch", "Recirculation Pump")
-	device = pump.query()
+	#JB - Get FROM json file
+	#    Device
+	#    Time Pump Should be On
+	#    Time Pump should be Off
 	
-	logging.info("Pump Status: "+ str(device["state"]))
+	# Get Recirc Pump Status
+	pump = SmartPump(SmartDevice("SAMSUNG", "switch", "Recirculation Pump"))
+	logging.info("Pump Status: "+ str(pump.get_status()))
+
+	# JB - Setup Threads
 
 if __name__ == '__main__':
 	main()
