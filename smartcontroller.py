@@ -28,7 +28,7 @@ import sys
 import logging
 import time
 
-from smartthings_cli import *
+from smartthings import *
 from pyharmony import client as harmony_client
 
 '''
