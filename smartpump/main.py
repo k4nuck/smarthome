@@ -33,6 +33,7 @@ from subprocess import call
 
 sys.path.append("/home/pi/projects/smarthome/") 
 
+from smartpumps import *
 from smartpump import *
 
 # Process for sending commands to the server from command line
@@ -81,14 +82,23 @@ def main():
 	
 	logging.info( "Smart Pump Started")
 	
+	# Get data from JSON File
+	with open("/home/pi/projects/smarthome/smartpump/smartpump_config.json") as json_object:
+		json_data = json.load(json_object)
+		myPumps = SmartPumps(json_data)
+		logging.info("Smart Pump JSON: "+ str(json_data))
+		
+	
 	#JB - Get FROM json file
 	#    Device
 	#    Time Pump Should be On
 	#    Time Pump should be Off
+	#    Time System is on
+	#    Time System is off
 	
 	# Get Recirc Pump Status
-	pump = SmartPump(SmartDevice("SAMSUNG", "switch", "Recirculation Pump"))
-	logging.info("Pump Status: "+ str(pump.get_status()))
+	#pump = SmartPump(SmartDevice("SAMSUNG", "switch", "Recirculation Pump"))
+	#logging.info("Pump Status: "+ str(pump.get_status()))
 
 	# JB - Setup Threads
 

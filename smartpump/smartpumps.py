@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  smartpump.py
+#  smartpumps.py
 #  
 #  Copyright 2018  <pi@raspberrypi>
 #  Joseph Bersito
@@ -27,6 +27,7 @@ import os
 import sys
 import logging
 
+from smartpump import *
 from smartdevice import *
 
 '''
@@ -36,20 +37,7 @@ Example:
   
 '''
 
-class SmartPump:
-	def __init__(self,device):
+class SmartPumps:
+	def __init__(self,json_data):
 		# Create Device
-		self.device = device
 		
-	# Get Status
-	def get_status(self):
-		try:
-			currentState = self.device.query()
-			return currentState["state"]
-		except:
-			logging.critical("Smart Pump: Failed Device Query")
-			return False
-	
-	# Refresh
-	def refresh(self):
-		currentStatus = self.get_status()
