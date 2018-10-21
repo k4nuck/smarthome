@@ -40,4 +40,11 @@ Example:
 class SmartPumps:
 	def __init__(self,json_data):
 		# Create Device
+		logging.info("Smart Pump JSON: "+ str(json_data))
 		
+		# Get Recirc Pump Status
+		#pump = SmartPump(SmartDevice("SAMSUNG", "switch", "Recirculation Pump"))
+		#logging.info("Pump Status: "+ str(pump.get_status()))
+		
+	def refresh(self):
+		logging.info("Smart Pump Refresh")

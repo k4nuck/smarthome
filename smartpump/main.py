@@ -34,7 +34,6 @@ from subprocess import call
 sys.path.append("/home/pi/projects/smarthome/") 
 
 from smartpumps import *
-from smartpump import *
 
 # Process for sending commands to the server from command line
 def fifo_worker(mainLoopQueue):
@@ -86,21 +85,35 @@ def main():
 	with open("/home/pi/projects/smarthome/smartpump/smartpump_config.json") as json_object:
 		json_data = json.load(json_object)
 		myPumps = SmartPumps(json_data)
-		logging.info("Smart Pump JSON: "+ str(json_data))
 		
+	# Create Queue
+	mainLoopQueue = multiprocessing.Queue()
 	
-	#JB - Get FROM json file
-	#    Device
-	#    Time Pump Should be On
-	#    Time Pump should be Off
-	#    Time System is on
-	#    Time System is off
+	#Spawn Threads
+	fifo_thread = multiprocessing.Process(target=fifo_worker, args=(mainLoopQueue,))
+	timer_thread = multiprocessing.Process(target=timer_worker, args=(mainLoopQueue,))
 	
-	# Get Recirc Pump Status
-	#pump = SmartPump(SmartDevice("SAMSUNG", "switch", "Recirculation Pump"))
-	#logging.info("Pump Status: "+ str(pump.get_status()))
+	logging.info( "Smart Pump: Kicking off threads")
+	
+	#Start Threads
+	fifo_thread.start()
+	timer_thread.start()
 
-	# JB - Setup Threads
+	#Main Loop
+	while True:
+		obj= mainLoopQueue.get()
+		logging.info("Smart Pump: Main Loop:Item:%s" % obj["cmd"])
+		
+		#Handle Timer Interupt
+		if obj["cmd"]=="Time":
+			myPumps.refresh()
+			
+		# Handle Exit
+		if obj["cmd"]=="exit":
+			logging.info( "Smart Pump: Quitting")
+			fifo_thread.terminate()
+			timer_thread.terminate()
+			return
 
 if __name__ == '__main__':
 	main()
