@@ -37,11 +37,13 @@ Example:
 '''
 
 class SmartPump:
-	def __init__(self,device):
+	def __init__(self,device, pump_data):
 		# Create Device
 		self.device = device
 		
-		# JB - Need to store Timing info
+		# Store pump data
+		self.pump_data = pump_data
+		logging.info("Creating Smart Pump: "+str(pump_data))
 		
 	# Get Status
 	def get_status(self):
@@ -54,5 +56,7 @@ class SmartPump:
 	
 	# JB - Refresh
 	def refresh(self):
-		currentStatus = self.get_status()
-		logging.info("Smart Pump Refresh: "+ str(currentStatus))
+		#currentStatus = self.get_status()
+		#logging.info("Smart Pump Refresh: "+ str(currentStatus))
+		return
+		

@@ -57,12 +57,27 @@ class SmartPumps:
 			# Create Smart Device
 			smart_device = SmartDevice(controller, device_type, device_name)
 			
-			# JB - Just create the pump for now
-			pump = SmartPump(smart_device)
+			# Create Pump Data
+			pump_data = {}
+			pump_on = device["pump"]["on"]
+			pump_off = device["pump"]["off"]
+			
+			pump_data["pump_on"] = pump_on
+			pump_data["pump_off"] = pump_off
+			
+			pump_timers = device["timers"]
+			timers = []
+			for timer in pump_timers:
+				#JB - Convert HH/MM to datetime
+				
+			pump_data["timers"] = timers
+			
+			# Create the pump 
+			pump = SmartPump(smart_device, pump_data)
 			self.pumps.append(pump)
 			
 			#JB - TEST converting HH:MM to datetime
-			logging.info("SmartPumps HH MM Test:" + str(self.home_utils.get_datetime_from_hh_mm(6,30)))
+			#logging.info("SmartPumps HH MM Test:" + str(self.home_utils.get_datetime_from_hh_mm(6,30)))
 	
 	# Enable/Disable the system
 	def set_system_status(self,val):
