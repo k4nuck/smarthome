@@ -36,12 +36,11 @@ import datetime, time
 class SmartHomeDB:
 	DB=None
 	
-	def __init__ (self):
-		logging.info("Creating SmartHomeDB")
+	def __init__ (self,dbname):
+		logging.info("Creating SmartHomeDB: "+dbname)
 		
 		if SmartHomeDB.DB == None:
 			couchserver = couchdb.Server("http://127.0.0.1:5984/")
-			dbname = "smarthomedb" 
 			if dbname in couchserver:
 				logging.info("Found DB in Server:"+dbname)
 				SmartHomeDB.DB = couchserver[dbname]

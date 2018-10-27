@@ -41,6 +41,8 @@ class SmartPump:
 		# Create Device
 		self.device = device
 		
+		# JB - Need to store Timing info
+		
 	# Get Status
 	def get_status(self):
 		try:
@@ -50,6 +52,7 @@ class SmartPump:
 			logging.critical("Smart Pump: Failed Device Query")
 			return False
 	
-	# Refresh
+	# JB - Refresh
 	def refresh(self):
 		currentStatus = self.get_status()
+		logging.info("Smart Pump Refresh: "+ str(currentStatus))

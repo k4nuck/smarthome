@@ -31,8 +31,12 @@ from smarthomedb import *
 
 class SmartHomeUtils:
 	# Initialization
-	def __init__ (self):
-		self.myHomeDB = SmartHomeDB()
+	def __init__ (self, dbname):
+		logging.info("SmartHomeUtils: dbname:"+ str(dbname))
+		
+		if dbname == None:
+			dbname = "smarthomedb"
+		self.myHomeDB = SmartHomeDB(dbname)
 		
 	# Return number of seconds from datetime
 	def get_seconds_from_datetime(self, t):
@@ -41,6 +45,10 @@ class SmartHomeUtils:
 	# Return datetime from seconds
 	def get_datetime_from_seconds(self, seconds):
 		return datetime.datetime.fromtimestamp(seconds)
+	
+	# Get datetime from HH:MM
+	def get_datetime_from_hh_mm(self, hh,mm):
+		return datetime.time(hh,mm)
 	
 	# Get DB Handle
 	def get_db_handle(self):
