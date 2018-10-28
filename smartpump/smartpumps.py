@@ -45,7 +45,7 @@ class SmartPumps:
 		self.home_utils = SmartHomeUtils("smartpumpdb")
 		
 		# Create Pumps(s)
-		logging.info("Smart Pumps JSON: "+ str(json_data))
+		logging.debug("Smart Pumps JSON: "+ str(json_data))
 		
 		devices = json_data["devices"]
 		
@@ -57,6 +57,9 @@ class SmartPumps:
 			# Create Smart Device
 			smart_device = SmartDevice(controller, device_type, device_name)
 			
+			logging.info("=========================")
+			logging.info("Device: "+ device_name)
+			
 			# Create Pump Data
 			pump_data = {}
 			pump_on = device["pump"]["on"]
@@ -65,22 +68,38 @@ class SmartPumps:
 			pump_data["pump_on"] = pump_on
 			pump_data["pump_off"] = pump_off
 			
-			pump_timers = device["timers"]
-			timers = []
-			for timer in pump_timers:
-				#JB - Convert HH/MM to datetime
+			logging.info("Pump On: "+ str(pump_on)+" seconds")
+			logging.info("Pump Off: " +str(pump_off)+" seconds")
+			
+			cfg_schedule = device["schedule"]
+			schedule = []
+			for aSchedule in cfg_schedule:
+				start_hh = aSchedule["start_hh"]
+				start_mm = aSchedule["start_mm"]
+				end_hh = aSchedule["end_hh"]
+				end_mm = aSchedule["end_mm"]
 				
-			pump_data["timers"] = timers
+				logging.info("---------------")
+				
+				
+				# Convert to Time Object
+				starttime = self.home_utils.get_datetime_from_hh_mm(start_hh,start_mm)
+				endtime = self.home_utils.get_datetime_from_hh_mm(end_hh,end_mm)
+				
+				logging.info("Schedule Start: "+ str(starttime))
+				logging.info("Schedule End: "+ str(endtime))
+				
+				schedule.append({"starttime":starttime, "endtime":endtime})
+				
+			pump_data["schedule"] = schedule
 			
 			# Create the pump 
 			pump = SmartPump(smart_device, pump_data)
 			self.pumps.append(pump)
-			
-			#JB - TEST converting HH:MM to datetime
-			#logging.info("SmartPumps HH MM Test:" + str(self.home_utils.get_datetime_from_hh_mm(6,30)))
 	
 	# Enable/Disable the system
 	def set_system_status(self,val):
+		logging.info("Smartpumps Status Set: "+ str(val))
 		self.system_status = val
 	
 	# Get Satus of the system
@@ -89,7 +108,7 @@ class SmartPumps:
 	
 	# Refresh Pumps
 	def refresh(self):
-		logging.info("Smart Pumps Refresh:Status:"+ str(self.get_system_status()))
+		logging.debug("Smart Pumps Refresh:Status:"+ str(self.get_system_status()))
 		
 		if not self.get_system_status():
 			logging.info("Smart Pumps system disabled.  Return")

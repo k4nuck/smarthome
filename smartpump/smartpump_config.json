@@ -5,7 +5,7 @@
 			"device_type":"switch", 
 			"device_name":"Recirculation Pump",
 			"pump":{"on":180,"off":600},
-			"timers":[{
+			"schedule":[{
 				"start_hh":6,
 				"start_mm":0,
 				"end_hh":23,

@@ -102,7 +102,7 @@ def main():
 	#Main Loop
 	while True:
 		obj= mainLoopQueue.get()
-		logging.info("Smart Pump: Main Loop:Item:%s" % obj["cmd"])
+		logging.debug("Smart Pump: Main Loop:Item:%s" % obj["cmd"])
 		
 		#Handle Timer Interupt
 		if obj["cmd"]=="Time":
