@@ -4,7 +4,7 @@
 			"controller":"SAMSUNG", 
 			"device_type":"switch", 
 			"device_name":"Recirculation Pump",
-			"pump":{"on":180,"off":600},
+			"pump":{"on":180,"off":900},
 			"schedule":[{
 				"start_hh":6,
 				"start_mm":0,

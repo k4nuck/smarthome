@@ -49,6 +49,11 @@ class SmartHomeUtils:
 	# Get datetime from HH:MM
 	def get_datetime_from_hh_mm(self, hh,mm):
 		return datetime.time(hh,mm)
+		
+	# Get current timestamp
+	def get_current_timestamp(self):
+		return time.time()
+	
 	
 	# Get DB Handle
 	def get_db_handle(self):

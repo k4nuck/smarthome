@@ -26,6 +26,7 @@
 import os
 import sys
 import logging
+import time
 
 from smartdevice import *
 
@@ -38,15 +39,51 @@ Example:
 
 class SmartPump:
 	def __init__(self,device, pump_data):
+		logging.info("Creating Smart Pump: "+str(pump_data))
+		
 		# Create Device
 		self.device = device
 		
 		# Store pump data
 		self.pump_data = pump_data
-		logging.info("Creating Smart Pump: "+str(pump_data))
 		
-	# Get Status
+		# Initialize timestamp
+		self.timestamp = 0
+		
+		# Default pump on
+		self.set_pump_on()
+		
+	# Get Current Timestamp
+	def get_timestamp(self):
+		return self.timestamp
+		
+		
+	# Turn Pump on
+	def set_pump_on(self):
+		logging.info("Smart Pump: Set Pump On: "+ str(time.time() - self.get_timestamp()))
+		self.timestamp = time.time()
+		self.current_status = True
+		
+		# JB - Testing.  will uncomment when ready
+		# TRY/EXCEPT
+		# self.device.set_on()
+	
+	# Turn Pump Off
+	def set_pump_off(self):
+		logging.info("Smart Pump: Set Pump Off: "+ str(time.time() - self.get_timestamp()))
+		self.timestamp = time.time()
+		self.current_status = False
+		
+		# JB - Testing.  will uncomment when ready
+		# TRY/EXCEPT
+		# self.device.set_off()
+		
+	# Get pump status
 	def get_status(self):
+		return self.current_status
+	
+	# Get actual Status of the device 
+	def get_device_status(self):
 		try:
 			currentState = self.device.query()
 			return currentState["state"]
@@ -56,7 +93,12 @@ class SmartPump:
 	
 	# JB - Refresh
 	def refresh(self):
-		#currentStatus = self.get_status()
-		#logging.info("Smart Pump Refresh: "+ str(currentStatus))
-		return
+		# Check if Pump has been on long enough
+		if self.get_status():
+			if (time.time() - self.get_timestamp()) > self.pump_data["pump_on"]:
+				self.set_pump_off()
+		else:
+			if (time.time() - self.get_timestamp()) > self.pump_data["pump_off"]:
+				self.set_pump_on()
+		
 		
