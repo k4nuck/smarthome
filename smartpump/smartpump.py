@@ -60,23 +60,33 @@ class SmartPump:
 		
 	# Turn Pump on
 	def set_pump_on(self):
+		#JB - Update DB
+		
 		logging.info("Smart Pump: Set Pump On: "+ str(time.time() - self.get_timestamp()))
 		self.timestamp = time.time()
 		self.current_status = True
 		
-		# JB - Testing.  will uncomment when ready
-		# TRY/EXCEPT
-		# self.device.set_on()
+		# Turn Pump On
+		try:
+			self.device.set_on()
+		except:
+			logging.critical("Smart Pump Failed Turning Device on")
+		
 	
 	# Turn Pump Off
 	def set_pump_off(self):
+		#JB - Update DB
+		
 		logging.info("Smart Pump: Set Pump Off: "+ str(time.time() - self.get_timestamp()))
 		self.timestamp = time.time()
 		self.current_status = False
 		
-		# JB - Testing.  will uncomment when ready
-		# TRY/EXCEPT
-		# self.device.set_off()
+		# Turn Pump Off
+		try:
+			self.device.set_off()
+		except:
+			logging.critical("Smart Pump Failed Turning Device off")
+		
 		
 	# Get pump status
 	def get_status(self):
@@ -91,8 +101,11 @@ class SmartPump:
 			logging.critical("Smart Pump: Failed Device Query")
 			return False
 	
-	# JB - Refresh
+	# Refresh
 	def refresh(self):
+		#JB - Update DB
+		#JB - Check Schedule
+		
 		# Check if Pump has been on long enough
 		if self.get_status():
 			if (time.time() - self.get_timestamp()) > self.pump_data["pump_on"]:
