@@ -62,7 +62,7 @@ class SmartPump:
 	def set_pump_on(self):
 		#JB - Update DB
 		
-		logging.info("Smart Pump: Set Pump On: "+ str(time.time() - self.get_timestamp()))
+		logging.debug("Smart Pump: Set Pump On: "+ str(time.time() - self.get_timestamp()))
 		self.timestamp = time.time()
 		self.current_status = True
 		
@@ -77,7 +77,7 @@ class SmartPump:
 	def set_pump_off(self):
 		#JB - Update DB
 		
-		logging.info("Smart Pump: Set Pump Off: "+ str(time.time() - self.get_timestamp()))
+		logging.debug("Smart Pump: Set Pump Off: "+ str(time.time() - self.get_timestamp()))
 		self.timestamp = time.time()
 		self.current_status = False
 		

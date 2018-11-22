@@ -122,7 +122,7 @@ class SmartDevice:
 				logging.debug("Device Set Make Request:"+cmd)
 				self.device_state = False
 				
-		logging.info("SmartDevice:"+self.device_name+":Set Cmd:"+cmd)
+		logging.debug("SmartDevice:"+self.device_name+":Set Cmd:"+cmd)
 		
 		# Update last activity here
 		self.set_last_active()

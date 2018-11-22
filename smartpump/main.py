@@ -35,6 +35,8 @@ sys.path.append("/home/pi/projects/smarthome/")
 
 from smartpumps import *
 
+#JB - Create Web Worker to handle sending requests from the Web
+
 # Process for sending commands to the server from command line
 def fifo_worker(mainLoopQueue):
 	
