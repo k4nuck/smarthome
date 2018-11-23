@@ -53,6 +53,17 @@ class SmartPump:
 		# Default pump on
 		self.set_pump_on()
 		
+		# Every 5 min check to make sure current state and device state on in sync
+		self.set_refresh_time()
+		
+	# Set Refresh Time
+	def set_refresh_time(self):
+		self.refresh_time = time.time()
+		
+	# Get Refresh Time
+	def get_refresh_time(self):
+		return self.refresh_time
+	
 	# Get Current Timestamp
 	def get_timestamp(self):
 		return self.timestamp
@@ -106,6 +117,14 @@ class SmartPump:
 		#JB - Update DB
 		#JB - Check Schedule
 		
+		# Check status of the Device to make sure there wasn't a failure earlier
+		if (time.time() - self.get_refresh_time()) > 300:
+			logging.debug("Smart Pump: Checking Device State")
+			self.set_refresh_time()
+			if self.get_status() != self.get_device_status():
+				logging.critical("Smart Pump: DEVICE STATE NOT IN SYNC.  Set OFF")
+				self.set_pump_off()
+				
 		# Check if Pump has been on long enough
 		if self.get_status():
 			if (time.time() - self.get_timestamp()) > self.pump_data["pump_on"]:
