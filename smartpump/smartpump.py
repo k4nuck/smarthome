@@ -29,6 +29,7 @@ import logging
 import time
 
 from smartdevice import *
+from smarthomeutils import *
 
 '''
 Handle Smart Pump Usage
@@ -41,6 +42,8 @@ class SmartPump:
 	def __init__(self,device, pump_data):
 		logging.info("Creating Smart Pump: "+str(pump_data))
 		
+		self.home_utils = SmartHomeUtils("smartpumpdb")
+		
 		# Create Device
 		self.device = device
 		
@@ -50,8 +53,8 @@ class SmartPump:
 		# Initialize timestamp
 		self.timestamp = 0
 		
-		# Default pump on
-		self.set_pump_on()
+		# Default pump off
+		self.set_pump_off()
 		
 		# Every 5 min check to make sure current state and device state on in sync
 		self.set_refresh_time()
@@ -115,7 +118,6 @@ class SmartPump:
 	# Refresh
 	def refresh(self):
 		#JB - Update DB
-		#JB - Check Schedule
 		
 		# Check status of the Device to make sure there wasn't a failure earlier
 		if (time.time() - self.get_refresh_time()) > 300:
@@ -125,11 +127,33 @@ class SmartPump:
 				logging.critical("Smart Pump: DEVICE STATE NOT IN SYNC.  Set OFF")
 				self.set_pump_off()
 				
+		# Check Schedules
+		allowRun = False
+		schedule = self.pump_data["schedule"]
+		for aSchedule in schedule:
+			starttime = aSchedule["starttime"]
+			endtime = aSchedule["endtime"]
+			currenttime = self.home_utils.get_datetime_now()
+			
+			logging.debug("Smart Pump: Start:"+str(starttime))
+			logging.debug("Smart Pump: End:"+ str(endtime))
+			logging.debug("Smart Pump: Current:" +str(currenttime))
+			
+			# Check if we are inside of the run time
+			if (currenttime > starttime) and (currenttime < endtime):
+				allowRun = True 
+		
+		logging.debug("Smart Pump: Allow Run: "+ str(allowRun))
+			
 		# Check if Pump has been on long enough
 		if self.get_status():
 			if (time.time() - self.get_timestamp()) > self.pump_data["pump_on"]:
 				self.set_pump_off()
 		else:
+			if not allowRun:
+				logging.info("Smart Pump: Not in Schedule.  RETURN")
+				return
+				
 			if (time.time() - self.get_timestamp()) > self.pump_data["pump_off"]:
 				self.set_pump_on()
 		

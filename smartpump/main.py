@@ -58,6 +58,12 @@ def fifo_worker(mainLoopQueue):
 				
 			if line=="status":
 				mainLoopQueue.put({'cmd':line, 'data':None})
+				
+			if line=="on":
+				mainLoopQueue.put({'cmd':line, 'data':None})
+				
+			if line=="off":
+				mainLoopQueue.put({'cmd':line, 'data':None})
 					
 		fifo.close()
 
@@ -109,6 +115,16 @@ def main():
 		#Handle Timer Interupt
 		if obj["cmd"]=="Time":
 			myPumps.refresh()
+			
+		#Handle Disable System
+		if obj["cmd"]=="off":
+			logging.info("Smart Pump: Disable Sysem")
+			myPumps.set_system_status(False)
+						
+		#Handle Enable System
+		if obj["cmd"]=="on":
+			logging.info("Smart Pump: Enable Sysem")
+			myPumps.set_system_status(True)
 			
 		# Handle Exit
 		if obj["cmd"]=="exit":

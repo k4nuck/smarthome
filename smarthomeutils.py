@@ -48,7 +48,13 @@ class SmartHomeUtils:
 	
 	# Get datetime from HH:MM
 	def get_datetime_from_hh_mm(self, hh,mm):
-		return datetime.time(hh,mm)
+		today = self.get_datetime_now()
+		today = today.replace(hour=hh)
+		today = today.replace(minute=mm)
+		return today
+		
+	def get_datetime_now(self):
+		return datetime.datetime.now()
 		
 	# Get current timestamp
 	def get_current_timestamp(self):
