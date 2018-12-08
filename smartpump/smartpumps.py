@@ -26,6 +26,7 @@
 import os
 import sys
 import logging
+import time
 
 from smartpump import *
 from smartdevice import *
@@ -86,10 +87,10 @@ class SmartPumps:
 				starttime = self.home_utils.get_datetime_from_hh_mm(start_hh,start_mm)
 				endtime = self.home_utils.get_datetime_from_hh_mm(end_hh,end_mm)
 				
-				logging.info("Schedule Start: "+ str(starttime))
-				logging.info("Schedule End: "+ str(endtime))
+				logging.info("Schedule Start: "+ str(datetime.time(start_hh,start_mm)))
+				logging.info("Schedule End: "+ str(datetime.time(end_hh, end_mm)))
 				
-				schedule.append({"starttime":starttime, "endtime":endtime})
+				schedule.append({"start_hh":start_hh, "start_mm":start_mm, "end_hh":end_hh, "end_mm":end_mm})
 				
 			pump_data["schedule"] = schedule
 			
@@ -111,7 +112,7 @@ class SmartPumps:
 		logging.debug("Smart Pumps Refresh:Status:"+ str(self.get_system_status()))
 		
 		if not self.get_system_status():
-			logging.info("Smart Pumps system disabled.  Return")
+			logging.debug("Smart Pumps system disabled.  Return")
 			return
 		
 		# Refresh all pumps

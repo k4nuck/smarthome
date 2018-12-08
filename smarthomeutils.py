@@ -59,8 +59,7 @@ class SmartHomeUtils:
 	# Get current timestamp
 	def get_current_timestamp(self):
 		return time.time()
-	
-	
+		
 	# Get DB Handle
 	def get_db_handle(self):
 		return self.myHomeDB
