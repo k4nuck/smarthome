@@ -154,8 +154,8 @@ class SmartPump:
 			
 			# Check if endttime crossed days.  
 			# IE. Schedule 11:00pm to 6:00am
-			if starttime > endttime:
-				endttime = endttime + timedelta(days=1)
+			if starttime > endtime:
+				endtime = endtime + timedelta(days=1)
 			
 			logging.debug("Smart Pump: Start:"+str(starttime))
 			logging.debug("Smart Pump: End:"+ str(endtime))
