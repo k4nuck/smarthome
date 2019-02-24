@@ -63,6 +63,9 @@ class SmartPump:
 		# Flag to know when we are in schedule or out
 		self.set_in_schedule(True)
 		
+		# Default Vacation Mode to False
+		self.set_vacation_mode(False)
+		
 	# In Schedule Flag
 	def set_in_schedule(self,val):
 		self.in_schedule = val
@@ -127,6 +130,14 @@ class SmartPump:
 			logging.critical("Smart Pump: Failed Device Query")
 			return False
 	
+	# Handle Vacation
+	def set_vacation_mode(self, val):
+		logging.info("Smart Pump Vacation Mode: " + str(val))
+		self.vacation = val		
+			
+	def get_vacation_mode(self):
+		return self.vacation
+	
 	# Refresh
 	def refresh(self):
 		#JB - Update DB
@@ -139,7 +150,11 @@ class SmartPump:
 				logging.critical("Smart Pump: DEVICE STATE NOT IN SYNC.  Set OFF")
 				self.set_pump_off()
 				
-		# Check Schedules
+		# Vacation Schedule
+		vacation_start_time = self.home_utils.get_datetime_from_hh_mm(12,0)
+		vacation_end_time = self.home_utils.get_datetime_from_hh_mm(13,0)
+		
+		# Check Schedules 
 		allowRun = False
 		schedule = self.pump_data["schedule"]
 		for aSchedule in schedule:
@@ -161,9 +176,15 @@ class SmartPump:
 			logging.debug("Smart Pump: End:"+ str(endtime))
 			logging.debug("Smart Pump: Current:" +str(currenttime))
 			
-			# Check if we are inside of the run time
-			if (currenttime > starttime) and (currenttime < endtime):
-				allowRun = True 
+			# Check if we are in vacation mode
+			if self.get_vacation_mode():
+				if (currenttime > vacation_start_time) and (currenttime < vacation_end_time):
+					logging.debug("Smart Pump Vacation Mode; Allow")
+					allowRun = True
+			else:
+				# Check if we are inside of the run time
+				if (currenttime > starttime) and (currenttime < endtime):
+					allowRun = True 
 		
 		logging.debug("Smart Pump: Allow Run: "+ str(allowRun))
 			

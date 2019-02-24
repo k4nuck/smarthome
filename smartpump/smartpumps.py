@@ -97,6 +97,9 @@ class SmartPumps:
 			# Create the pump 
 			pump = SmartPump(smart_device, pump_data)
 			self.pumps.append(pump)
+			
+		# Set Vacation Mode
+		self.set_vacation_mode(False)
 	
 	# Enable/Disable the system
 	def set_system_status(self,val):
@@ -106,6 +109,15 @@ class SmartPumps:
 	# Get Satus of the system
 	def get_system_status(self):
 		return self.system_status
+		
+	# Handle Vacation
+	def set_vacation_mode(self, val):
+		logging.info("Smart Pumps Vacation Mode: " + str(val))
+		
+		for pump in self.pumps:
+			pump.set_vacation_mode(val)
+		
+	
 	
 	# Refresh Pumps
 	def refresh(self):

@@ -64,6 +64,12 @@ def fifo_worker(mainLoopQueue):
 				
 			if line=="off":
 				mainLoopQueue.put({'cmd':line, 'data':None})
+				
+			if line == "vacation_on":
+				mainLoopQueue.put({'cmd':"vacation", 'data':'on'})
+				
+			if line == "vacation_off":
+				mainLoopQueue.put({'cmd':"vacation", 'data':'off'})
 					
 		fifo.close()
 
@@ -125,6 +131,16 @@ def main():
 		if obj["cmd"]=="on":
 			logging.info("Smart Pump: Enable Sysem")
 			myPumps.set_system_status(True)
+			
+		# Handle Vacation
+		if obj["cmd"] == "vacation":
+			logging.info("Smart Pump: Vacation:"+ str(obj['data']))
+			if obj['data'] == 'on':
+				val = True
+			else:
+				val = False
+				
+			myPumps.set_vacation_mode(val)
 			
 		# Handle Exit
 		if obj["cmd"]=="exit":
