@@ -42,8 +42,13 @@ Example:
 class SmartPumps:
 	def __init__(self,json_data):
 		self.pumps = []
-		self.set_system_status(True)
 		self.home_utils = SmartHomeUtils("smartpumpdb")
+		
+		rec = self.get_smartpump_state()
+		
+		# Restore system state
+		self.set_system_status_no_db(rec["system"])
+		
 		
 		# Create Pumps(s)
 		logging.debug("Smart Pumps JSON: "+ str(json_data))
@@ -98,11 +103,21 @@ class SmartPumps:
 			pump = SmartPump(smart_device, pump_data)
 			self.pumps.append(pump)
 			
-		# Set Vacation Mode
-		self.set_vacation_mode(False)
+		# Restore Vacation Mode
+		self.set_vacation_mode_no_db(rec["vacation"])
+		
+		# Update Cache ... make sure we have a default record.
+		self.update_smartpump_state()
+		
 	
 	# Enable/Disable the system
 	def set_system_status(self,val):
+		self.set_system_status_no_db(self,val)
+		
+		# Update Cache
+		self.update_smartpump_state()
+	
+	def set_system_status_no_db(self,val):
 		logging.info("Smartpumps Status Set: "+ str(val))
 		self.system_status = val
 	
@@ -111,13 +126,52 @@ class SmartPumps:
 		return self.system_status
 		
 	# Handle Vacation
-	def set_vacation_mode(self, val):
+	def set_vacation_mode(self,val):
+		self.set_vacation_mode_no_db(self,val)
+		
+		# Update Cache
+		self.update_smartpump_state()
+		
+	def set_vacation_mode_no_db(self, val):
 		logging.info("Smart Pumps Vacation Mode: " + str(val))
+		
+		self.vacation = val
 		
 		for pump in self.pumps:
 			pump.set_vacation_mode(val)
+			
+	def get_vacation_mode(self):
+		return self.vacation
 		
-	
+		
+	# Update Cache
+	def update_smartpump_state(self):
+		logging.info("Smart Pumps Set Cache")
+		
+		rec = {}
+		
+		# Populate Rec
+		rec["system"] = self.get_system_status() 
+		rec["vacation"] = self.get_vacation_mode()
+		
+		# Commit
+		self.home_utils.commit_record_in_db("SmartPumps",rec)
+		
+	# Get Cache
+	def get_smartpump_state(self):
+		rec = self.home_utils.get_record_from_db("SmartPumps")
+		
+		#Db Record Not found ... set default
+		if rec ==None:
+			logging.info("Smart Pumps failed to find Record")
+			rec={}
+			rec["system"] = True
+			rec["vacation"] = False
+		
+		logging.info("Smart Pumps Cache:" + str(rec))
+		
+		return rec
+		
 	
 	# Refresh Pumps
 	def refresh(self):

@@ -66,10 +66,19 @@ class SmartHomeUtils:
 	
 	# Return CurrentState Record
 	def get_current_state_from_db(self):
-		return self.get_db_handle().find_by_key("CurrentState")
+		self.get_record_from_db("CurrentState")
 		
 	# Update Current State Record
 	def commit_current_state_in_db(self, rec):
-		self.get_db_handle().update("CurrentState",rec)
+		self.commit_record_in_db("CurrentState",rec)
+		
+	# Return Supplied Name Record
+	def get_record_from_db(self,rec_name):
+		return self.get_db_handle().find_by_key(rec_name)
+		
+	# Commit Record
+	def commit_record_in_db(self,rec_name,rec):
+		self.get_db_handle().update(rec_name,rec)
+		
 		
 		

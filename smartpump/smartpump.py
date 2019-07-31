@@ -45,6 +45,8 @@ class SmartPump:
 		
 		self.home_utils = SmartHomeUtils("smartpumpdb")
 		
+		rec = self.get_smartpump_state()
+		
 		# Create Device
 		self.device = device
 		
@@ -52,10 +54,10 @@ class SmartPump:
 		self.pump_data = pump_data
 		
 		# Initialize timestamp
-		self.timestamp = 0
+		self.timestamp = rec["timestamp"]
 		
 		# Default pump off
-		self.set_pump_off()
+		self.set_pump_off_no_db()
 		
 		# Every 5 min check to make sure current state and device state on in sync
 		self.set_refresh_time()
@@ -65,6 +67,9 @@ class SmartPump:
 		
 		# Default Vacation Mode to False
 		self.set_vacation_mode(False)
+		
+		# Update Cache to make sure we have a default
+		self.update_smartpump_state()
 		
 	# In Schedule Flag
 	def set_in_schedule(self,val):
@@ -89,6 +94,12 @@ class SmartPump:
 		
 	# Turn Pump on
 	def set_pump_on(self):
+		self.set_pump_on_no_db()
+		
+		# Update Cache
+		self.update_smartpump_state()
+		
+	def set_pump_on_no_db(self):
 		#JB - Update DB
 		
 		logging.debug("Smart Pump: Set Pump On: "+ str(time.time() - self.get_timestamp()))
@@ -104,6 +115,12 @@ class SmartPump:
 	
 	# Turn Pump Off
 	def set_pump_off(self):
+		set_pump_off_no_db()
+		
+		# Update Cache
+		self.update_smartpump_state()
+	
+	def set_pump_off_no_db(self):
 		#JB - Update DB
 		
 		logging.debug("Smart Pump: Set Pump Off: "+ str(time.time() - self.get_timestamp()))
@@ -137,6 +154,32 @@ class SmartPump:
 			
 	def get_vacation_mode(self):
 		return self.vacation
+		
+	# Update Cache
+	def update_smartpump_state(self):
+		logging.info("Smart Pump Set Cache")
+		
+		rec = {}
+		
+		# Populate Rec
+		rec["timestamp"] = self.get_timestamp()
+		
+		# Commit
+		self.home_utils.commit_record_in_db("SmartPump",rec)
+		
+	# Get Cache
+	def get_smartpump_state(self):
+		rec = self.home_utils.get_record_from_db("SmartPump")
+		
+		#Db Record Not found ... set default
+		if rec ==None:
+			logging.info("Smart Pump failed to find Record")
+			rec={}
+			rec["timestamp"] = 0
+		
+		logging.info("Smart Pump Cache:" + str(rec))
+		
+		return rec
 	
 	# Refresh
 	def refresh(self):
