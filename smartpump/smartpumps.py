@@ -112,7 +112,7 @@ class SmartPumps:
 	
 	# Enable/Disable the system
 	def set_system_status(self,val):
-		self.set_system_status_no_db(self,val)
+		self.set_system_status_no_db(val)
 		
 		# Update Cache
 		self.update_smartpump_state()
@@ -127,7 +127,7 @@ class SmartPumps:
 		
 	# Handle Vacation
 	def set_vacation_mode(self,val):
-		self.set_vacation_mode_no_db(self,val)
+		self.set_vacation_mode_no_db(val)
 		
 		# Update Cache
 		self.update_smartpump_state()

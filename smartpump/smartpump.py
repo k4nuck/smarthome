@@ -45,8 +45,6 @@ class SmartPump:
 		
 		self.home_utils = SmartHomeUtils("smartpumpdb")
 		
-		rec = self.get_smartpump_state()
-		
 		# Create Device
 		self.device = device
 		
@@ -54,6 +52,7 @@ class SmartPump:
 		self.pump_data = pump_data
 		
 		# Initialize timestamp
+		rec = self.get_smartpump_state()
 		self.timestamp = rec["timestamp"]
 		
 		# Default pump off
@@ -96,14 +95,13 @@ class SmartPump:
 	def set_pump_on(self):
 		self.set_pump_on_no_db()
 		
+		logging.debug("Smart Pump: Set Pump On: "+ str(time.time() - self.get_timestamp()))
+		self.timestamp = time.time()
+		
 		# Update Cache
 		self.update_smartpump_state()
 		
 	def set_pump_on_no_db(self):
-		#JB - Update DB
-		
-		logging.debug("Smart Pump: Set Pump On: "+ str(time.time() - self.get_timestamp()))
-		self.timestamp = time.time()
 		self.current_status = True
 		
 		# Turn Pump On
@@ -115,16 +113,15 @@ class SmartPump:
 	
 	# Turn Pump Off
 	def set_pump_off(self):
-		set_pump_off_no_db()
+		self.set_pump_off_no_db()
+		
+		logging.debug("Smart Pump: Set Pump Off: "+ str(time.time() - self.get_timestamp()))
+		self.timestamp = time.time()
 		
 		# Update Cache
 		self.update_smartpump_state()
 	
 	def set_pump_off_no_db(self):
-		#JB - Update DB
-		
-		logging.debug("Smart Pump: Set Pump Off: "+ str(time.time() - self.get_timestamp()))
-		self.timestamp = time.time()
 		self.current_status = False
 		
 		# Turn Pump Off
@@ -165,11 +162,13 @@ class SmartPump:
 		rec["timestamp"] = self.get_timestamp()
 		
 		# Commit
-		self.home_utils.commit_record_in_db("SmartPump",rec)
+		name = self.device.get_device_name()
+		self.home_utils.commit_record_in_db("SmartPump"+str(name)+"state",rec)
 		
 	# Get Cache
 	def get_smartpump_state(self):
-		rec = self.home_utils.get_record_from_db("SmartPump")
+		name = self.device.get_device_name()
+		rec = self.home_utils.get_record_from_db("SmartPump"+str(name)+"state")
 		
 		#Db Record Not found ... set default
 		if rec ==None:
@@ -177,13 +176,12 @@ class SmartPump:
 			rec={}
 			rec["timestamp"] = 0
 		
-		logging.info("Smart Pump Cache:" + str(rec))
+		logging.info("Smart Pump Cache:" + str(self.home_utils.get_datetime_from_seconds(rec["timestamp"])))
 		
 		return rec
 	
 	# Refresh
 	def refresh(self):
-		#JB - Update DB
 		
 		# Check status of the Device to make sure there wasn't a failure earlier
 		if (time.time() - self.get_refresh_time()) > 300:
@@ -244,7 +242,7 @@ class SmartPump:
 					
 					# Make sure We didnt get out of schedule while pump was on
 					# WE SHOULD NEVEr NEED TO DO THIS.  But being extra careful
-					self.set_pump_off()
+					self.set_pump_off_no_db()
 				return
 				
 			if (time.time() - self.get_timestamp()) > self.pump_data["pump_off"]:
