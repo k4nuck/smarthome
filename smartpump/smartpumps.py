@@ -154,6 +154,8 @@ class SmartPumps:
 		rec["system"] = self.get_system_status() 
 		rec["vacation"] = self.get_vacation_mode()
 		
+		logging.info("Smart Pumps Set Cache:" + str(rec))
+		
 		# Commit
 		self.home_utils.commit_record_in_db("SmartPumps",rec)
 		

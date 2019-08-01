@@ -161,6 +161,8 @@ class SmartPump:
 		# Populate Rec
 		rec["timestamp"] = self.get_timestamp()
 		
+		logging.info("Set Cache:" + str(self.home_utils.get_datetime_from_seconds(rec["timestamp"])))
+		
 		# Commit
 		name = self.device.get_device_name()
 		self.home_utils.commit_record_in_db("SmartPump"+str(name)+"state",rec)
