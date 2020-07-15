@@ -37,16 +37,16 @@ from subprocess import call
 from smartwebhost import *
 
 # Process to Handle all Web Events
-def web_worker(guest_key, admin_key):
-	logging.info( "WEB Worker Spawned")
+def web_worker(guest_key, admin_key, port, post_address):
+	logging.info( "WEB Worker Spawned:" + str(port) + ":Post address:" + post_address)
 	
 	server_class=HTTPServer
 	handler_class=SmartWebHost
 	
-	#JB - CONFIG the PORT
-	server_address = ('', 40001)
+	server_address = ('', port)
 	handler_class.guest_key = guest_key
 	handler_class.admin_key = admin_key
+	handler_class.post_address = post_address
 	
 	httpd = server_class(server_address, handler_class)
    
@@ -95,6 +95,9 @@ def main():
 		webkey_data = json.load(webkey_object)
 		guest_key = webkey_data["webkey"]["guest"]
 		admin_key = webkey_data["webkey"]["admin"]
+		port = webkey_data["webkey"]["port"]
+		post_address = webkey_data["webkey"]["post_address"]
+		
 		logging.debug("guest:"+guest_key+":admin:"+admin_key)
 	
 	# Create Queue
@@ -102,7 +105,7 @@ def main():
 	
 	#Spawn Threads
 	fifo_thread = multiprocessing.Process(target=fifo_worker, args=(mainLoopQueue,))
-	web_thread = multiprocessing.Process(target=web_worker, args=(guest_key, admin_key))
+	web_thread = multiprocessing.Process(target=web_worker, args=(guest_key, admin_key, port, post_address))
 	
 	logging.info( "Smart Web: Kicking off threads")
 		
